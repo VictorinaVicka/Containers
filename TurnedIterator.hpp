@@ -6,7 +6,7 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 15:44:38 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/01/22 12:20:35 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/01/22 17:21:36 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,149 +15,155 @@
 
 # include <iostream>
 # include <cstddef>
-# include <limits>
-# include <string>
 
 namespace ft
 {
-	template<typename Iterator>
-	class TurnedIterator
+    template <typename Iterator>
+	class	TurnedIterator
 	{
-		public:
-		typedef TurnedIterator<Iterator> turned;
-		typedef typename 	Iterator::diff_type diff_type;
-		typedef typename 	Iterator::size size;
-		typedef typename	Iterator::pointer pointer;
-		typedef typename	Iterator::reference reference;
-		typedef typename	Iterator::value value;
-		typedef typename	Iterator::const_reference const_reference;
-		typedef typename	Iterator::const_pointer const_pointer;
+	public:
+		typedef Iterator iterator_type;
+		typedef typename std::iterator_traits<Iterator>::iterator_category iterator_category;
+		typedef typename std::iterator_traits<Iterator>::value_type value_type;
+		typedef typename std::iterator_traits<Iterator>::difference_type diff_type;
+		typedef typename std::iterator_traits<Iterator>::pointer pointer;
+		typedef typename std::iterator_traits<Iterator>::reference reference;
 
-		TurnedIterator() {};
+	private:
+		typedef TurnedIterator<Iterator> Self;
 
-		TurnedIterator(const TurnedIterator& it)
+        Iterator newBase;
+
+	public:
+        TurnedIterator() {}
+		TurnedIterator(Iterator base): newBase(base) {}
+		TurnedIterator(const TurnedIterator<Iterator> &c): newBase(c.newBase) {}
+		~TurnedIterator() {}
+
+        iterator_type base() const
 		{
-			base = it.base;
-		};
+            return newBase;
+        }
 
-		void operator = (const TurnedIterator& it)
+        Self &operator=(const Self &c)
 		{
-			base = it.base;
-		};
+			newBase = c.newBase;
+			return *this;
+		}
 
-		TurnedIterator(Iterator base): base(base)
-		{};
-
-			~TurnedIterator() {};
-
-			bool operator == (const TurnedIterator& it) const
-			{
-				return (it.base == base);
-			};
-
-			bool operator != (const TurnedIterator& it) const
-			{
-				return (it.base != base);
-			};
-
-			reference operator * ()
-			{
-				return (*base);
-			};
-
-			pointer operator -> ()
-			{
-				return (&(*base));
-			};
-
-			TurnedIterator& operator -- ()
-			{
-				base++;
-				return (*this);
-			};
-
-			TurnedIterator& operator ++ ()
-			{
-				base--;
-				return (*this);
-			};
-
-			TurnedIterator operator -- (int)
-			{
-	 			TurnedIterator b = *this;
-
-				base++;
-				return (b);
-			};
-
-			TurnedIterator operator ++ (int)
-			{
-				TurnedIterator b = *this;
-
-				base--;
-				return (b);
-			};
-
-		TurnedIterator operator + (diff_type n)
+        reference operator*() const
 		{
-			TurnedIterator b;
+            iterator_type it(newBase);
+            it--;
+            return *it;
+        }
 
-			b.base = base - n;
-			return (b);
-		};
-
-		TurnedIterator operator - (diff_type n)
+        pointer operator->() const
 		{
-			TurnedIterator b;
+			iterator_type it(newBase);
+			--it;
+			return it.operator->();
+		}
 
-			b.base = base + n;
-			return (b);
-		};
-
-		diff_type operator - (TurnedIterator it)
+        Self &operator--()
 		{
-			return (it.base - base);
-		};
+			++newBase;
+			return *this;
+		}
 
-		void operator += (diff_type n)
+		Self operator--(int)
 		{
-			base -= n;
-		};
+			Self rit(newBase++);
+			return rit;
+		}
 
-		void operator -= (diff_type n)
+        Self &operator-=(diff_type offset)
 		{
-			base += n;
-		};
+			newBase += offset;
+			return *this;
+		}
 
-		value& operator [] (diff_type n)
+		Self &operator++()
 		{
-			return (base[n]);
-		};
+            --newBase;
+            return *this;
+        }
 
-		bool operator > (const TurnedIterator& it) const
+        Self  operator++(int)
 		{
-			return (base < it.base);
-		};
+            Self rit(newBase--);
+            return rit;
+        }
 
-		bool operator >= (const TurnedIterator& it) const
+        Self &operator+=(diff_type offset)
 		{
-			return (base <= it.base);
-		};
+			newBase -= offset;
+			return *this;
+		}
+    };
 
+    template <typename Iterator>
+	bool operator==(const TurnedIterator<Iterator> &lhs, const TurnedIterator<Iterator> &rhs)
+	{
+		return lhs.base() == rhs.base();
+	}
 
-		bool operator < (const TurnedIterator& it) const
-		{
-			return (base > it.base);
-		};
+	template <typename Iterator>
+	bool operator!=(const TurnedIterator<Iterator> &lhs, const TurnedIterator<Iterator> &rhs)
+	{
+		return lhs.base() != rhs.base();
+	}
 
-		bool operator <= (const TurnedIterator& it) const
-		{
-			return (base >= it.base);
-		};
+	template <typename Iterator>
+	bool operator<(const TurnedIterator<Iterator> &lhs, const TurnedIterator<Iterator> &rhs)
+	{
+		return lhs.base() > rhs.base();
+	}
 
-		protected:
-			Iterator base;
-	};
-};
+	template <typename Iterator>
+	bool operator<=(const TurnedIterator<Iterator> &lhs, const TurnedIterator<Iterator> &rhs)
+	{
+		return lhs.base() >= rhs.base();
+	}
+
+	template <typename Iterator>
+	bool operator>(const TurnedIterator<Iterator> &lhs, const TurnedIterator<Iterator> &rhs)
+	{
+		return lhs.base() < rhs.base();
+	}
+
+	template <typename Iterator>
+	bool operator>=(const TurnedIterator<Iterator> &lhs, const TurnedIterator<Iterator> &rhs)
+	{
+		return lhs.base() <= rhs.base();
+	}
+
+	template <typename Iterator>
+	TurnedIterator<Iterator> operator-(const TurnedIterator<Iterator> &rit, typename TurnedIterator<Iterator>::difference_type offset)
+	{
+		TurnedIterator<Iterator> r(rit.base() + offset);
+		return r;
+	}
+
+	template <typename Iterator>
+	ptrdiff_t operator-(const TurnedIterator<Iterator> &lhs, const TurnedIterator<Iterator> &rhs)
+	{
+		return rhs.base() - lhs.base();
+	}
+
+	template <typename Iterator>
+	TurnedIterator<Iterator> operator+(const TurnedIterator<Iterator> &rit, size_t offset)
+	{
+		TurnedIterator<Iterator> r(rit.base() - offset);
+		return r;
+	}
+
+	template <typename Iterator>
+	TurnedIterator<Iterator> operator+(typename TurnedIterator<Iterator>::difference_type offset, const TurnedIterator<Iterator> &rit)
+	{
+		TurnedIterator<Iterator> r(rit.base() - offset);
+		return r;
+	}
+}
 
 #endif
