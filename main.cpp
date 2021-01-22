@@ -5,33 +5,41 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/22 15:19:08 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/01/22 15:25:01 by tfarenga         ###   ########.fr       */
+/*   Created: 2021/01/22 16:32:23 by tfarenga          #+#    #+#             */
+/*   Updated: 2021/01/22 16:35:22 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Test.hpp"
+#include "main.hpp"
 
-int main()
-{
-	// std::cout << ":: Vector ::" << std::endl;
-	// test_vector();
-	std::cout << ":: List ::" << std::endl;
-	test_list();
-	// std::cout << ":: Stack ::" << std::endl;
-	// test_stack();
-	// std::cout << ":: Queue ::" << std::endl;
-	// test_queue();
-	// std::cout << ":: Map ::" << std::endl;
-	// test_map();
-	// std::cout << ":: Set ::" << std::endl;
-	// test_set();
-	// std::cout << ":: MultiMap ::" << std::endl;
-	// test_multimap();
-	// std::cout << ":: MultiSet ::" << std::endl;
-	// test_multiset();
-	// std::cout << ":: Deque ::" << std::endl;
-	// test_deque();
-	// std::cout << ":: Everything is ok! ::" << std::endl;
-	return 0;
+int main() {
+    std::cout << "Select Container:" << std::endl;
+    std::cout << "List" << std::endl;
+    // std::cout << "2- Vector" << std::endl;
+    // std::cout << "3- Map" << std::endl;
+    // std::cout << "4- Stack" << std::endl;
+    // std::cout << "5- Queue" << std::endl << std::endl;
+
+    std::cout << "Entry: ";
+    std::string line;
+    std::getline(std::cin, line);
+    while (line.length() != 1 && line[0] < '1' && line[0] > '5') {
+        std::cout << "Wrong entry" << std::endl;
+        std::cout << "Entry: ";
+        std::getline(std::cin, line);
+		std::cout << std::endl;
+    }
+
+    if (line[0] == '1')
+        testList();
+    // else if (line[0] == '2')
+    //     testVector();
+    // else if (line[0] == '3')
+    //     testMap();
+    // else if (line[0] == '4')
+    //     testStack();
+    // else if (line[0] == '5')
+    //     testQueue();
+
+    return 0;
 }
