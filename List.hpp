@@ -6,7 +6,7 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 16:54:36 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/01/22 18:35:48 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/01/24 16:10:56 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -417,47 +417,52 @@ namespace ft
 
 		//Operations:
 
-		void splice(iterator position, List &x)
+		void splice(iterator position, Self &x)
 		{
 			splice(position, x, x.begin(), x.end());
 		}
 
-		void splice(iterator position, List &x, iterator i)
+		void splice(iterator position, Self &x, iterator i)
 		{
-			_node *leftNode = position.newNode->prev;
-			_node *rightNode = position.newNode;
-			_node *x_leftNode = i.newNode->prev;
-			_node *x_rightNode = i.newNode->next;
-
-			if (leftNode)
-			{
-				leftNode->next = i.newNode;
-				i.newNode->prev = leftNode;
-			}
-			else
-			{
-				firstN = i.newNode;
-				i.newNode->prev = NULL;
-			}
-			i.newNode->next = rightNode;
-			rightNode->prev = i.newNode;
-			if (x_leftNode)
-				x_leftNode->next = x_rightNode;
-			else
-				x.firstN = x_rightNode;
-			x_rightNode->prev = x_leftNode;
-			newSize++;
-			x.newSize--;
+			iterator next = i;
+			++next;
+			splice(position, x, i, next);
 		}
 
-		void splice(iterator position, List &x, iterator first, iterator last)
+		void splice(iterator position, Self &x, iterator first, iterator last)
 		{
-			while (first != last)
+			_node *node_right = position.newNode;
+			_node *node_left = node_right->prev;
+
+			_node *nodeR = last.newNode;
+			_node *nodeL = first.newNode->prev;
+
+			size_type count = 0;
+			for (; first != last; ++first)
 			{
-				iterator it = first;
-				first++;
-				splice(position, x, it);
+				_node *to_transfer = first.newNode;
+
+				if (node_left)
+					node_left->next = to_transfer;
+				else
+					firstN = to_transfer;
+
+				to_transfer->prev = node_left;
+
+				node_left = to_transfer;
+				++count;
 			}
+
+			node_left->next = node_right;
+			node_right->prev = node_left;
+			nodeR->prev = nodeL;
+			if (nodeL)
+				nodeL->next = nodeR;
+			else
+				x.firstN = nodeR;
+
+			newSize += count;
+			x.newSize -= count;
 		}
 
 		void remove(const value_type &val)
@@ -582,31 +587,24 @@ namespace ft
 
 		void reverse()
 		{
-			size_t i = 1;
 			iterator it = begin();
-			iterator it2 = end();
-			it2--;
-			while (it != it2 && i < newSize / 2)
+			iterator begin = it;
+			while (1)
 			{
 				iterator tmp = it;
-				iterator tmp2 = it2;
-				_node *prv = tmp2.newNode->prev;
-				_node *nxt = tmp2.newNode->next;
-				it++;
-				it2--;
-				if (tmp.newNode->prev)
-					tmp.newNode->prev->next = tmp2.newNode;
+				++it;
+				if (tmp.newNode->next == last)
+				{
+					tmp.newNode->next = tmp.newNode->prev;
+					tmp.newNode->prev = NULL;
+					firstN = tmp.newNode;
+					break;
+				}
 				else
-					firstN = tmp2.newNode;
-				tmp2.newNode->prev = tmp.newNode->prev;
-				tmp2.newNode->next = tmp.newNode->next;
-				tmp.newNode->next->prev = tmp2.newNode;
-				tmp.newNode->next = nxt;
-				tmp.newNode->prev = prv;
-				nxt->prev = tmp.newNode;
-				prv->next = tmp.newNode;
-				i++;
+					std::swap(tmp.newNode->prev, tmp.newNode->next);
 			}
+			last->prev = begin.newNode;
+			begin.newNode->next = last;
 		}
 
 	};
