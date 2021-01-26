@@ -6,40 +6,39 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 16:32:23 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/01/22 16:35:22 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/01/26 17:17:11 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "main.hpp"
+#include <iostream>
 
-int main() {
-    std::cout << "Select Container:" << std::endl;
-    std::cout << "List" << std::endl;
-    // std::cout << "2- Vector" << std::endl;
-    // std::cout << "3- Map" << std::endl;
-    // std::cout << "4- Stack" << std::endl;
-    // std::cout << "5- Queue" << std::endl << std::endl;
+void testList();
+void testQueue();
+void testVector();
+void testStack();
+void testMap();
 
-    std::cout << "Entry: ";
-    std::string line;
-    std::getline(std::cin, line);
-    while (line.length() != 1 && line[0] < '1' && line[0] > '5') {
-        std::cout << "Wrong entry" << std::endl;
-        std::cout << "Entry: ";
-        std::getline(std::cin, line);
-		std::cout << std::endl;
-    }
+int main()
+{
+    std::cout << "<<<<<<<<<<<<Containers:>>>>>>>>>>" << std::endl;
+    std::cout << "1: List" << std::endl;
+    std::cout << "2: Queue" << std::endl;
+    std::cout << "3: Vector" << std::endl;
+    std::cout << "4: Stack" << std::endl;
+    std::cout << "5: Map" << std::endl;
 
-    if (line[0] == '1')
+    std::cout << "Сhoice: ";
+    std::string s;
+    std::getline(std::cin, s);
+    if (s[0] == '1')
         testList();
-    // else if (line[0] == '2')
-    //     testVector();
-    // else if (line[0] == '3')
-    //     testMap();
-    // else if (line[0] == '4')
-    //     testStack();
-    // else if (line[0] == '5')
-    //     testQueue();
-
+    else if (s[0] == '2')
+        testQueue();
+    else if (s[0] == '3')
+        testVector();
+    else if (s[0] == '4')
+        testStack();
+    else if (s[0] == '5')
+        testMap();
     return 0;
 }
