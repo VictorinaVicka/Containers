@@ -1,59 +1,41 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main_list.cpp                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/22 16:32:29 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/01/22 16:36:09 by tfarenga         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-# include <iostream>
-# include <fstream>
-# include <string>
-# include <sstream>
-
 #include "List.hpp"
 #include "Utils.hpp"
 
-void    list_enum(ft::List<int> &lst) {
+void    list_test(ft::List<int> &list)
+{
     ft::List<int>::iterator it;
     ft::List<int>::iterator it2;
 
-    it = lst.begin();
-    it2 = lst.end();
-
-    std::cout << "\e[1;33mEnumeration" << std::endl;
-    while (it != it2) {
+    it = list.begin();
+    it2 = list.end();
+    while (it != it2)
+    {
         std::cout << *it << std::endl;
         it++;
     }
 }
 
-void    lst_test_iterator() {
-    std::cout << "\e[0;34m----------ITERATOR----------" << std::endl;
+void    list_test_iterator()
+{
+    std::cout << "----------ITERATOR----------" << std::endl;
 
-    ft::List<int> lst;
-    lst.push_front(111);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(999);
+    ft::List<int> list;
+    list.push_front(111);
+    list.push_front(0);
+    list.push_front(777);
 
     ft::List<int>::iterator it;
     ft::List<int>::iterator it2;
     ft::List<int>::reverse_iterator rit;
     ft::List<int>::reverse_iterator rit2;
 
-    it = lst.begin();
-    it2 = lst.end();
-    rit = lst.rend();
-    rit2 = lst.rbegin();
+    it = list.begin();
+    it2 = list.end();
+    rit = list.rend();
+    rit2 = list.rbegin();
 
-    std::cout << "\e[1;33mEnumeration" << std::endl;
-    while (it != it2) {
+    while (it != it2)
+    {
         std::cout << *it << std::endl;
         it++;
     }
@@ -63,312 +45,312 @@ void    lst_test_iterator() {
 		rit2++;
     }
 
-    it = lst.begin();
+    it = list.begin();
     std::cout << "begin: " << *it << std::endl;
-    it = lst.end();
+    it = list.end();
     it--;
     std::cout << "end: " << *it << std::endl;
-    rit = lst.rbegin();
+    rit = list.rbegin();
     std::cout << "rbegin: " << *rit << std::endl;
-    rit = lst.rend();
+    rit = list.rend();
 	rit--;
     std::cout << "rend: " << *rit << std::endl;
 
-    lst.clear();
+    list.clear();
 }
 
-void    lst_test_capacity() {
-    std::cout << "\e[0;34m----------CAPACITY----------" << std::endl;
+void    list_test_capacity() {
+    std::cout << "----------CAPACITY----------" << std::endl;
 
-    ft::List<int> lst;
-    list_enum(lst);
-    std::cout << "empty ?: " << lst.empty() << std::endl;
-    std::cout << "size: " << lst.size() << std::endl;
-    lst.push_front(111);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(999);
+    ft::List<int> list;
+    list_test(list);
+    std::cout << "empty ?: " << list.empty() << std::endl;
+    std::cout << "size: " << list.size() << std::endl;
+    list.push_front(111);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(777);
 
-    list_enum(lst);
+    list_test(list);
 
-    std::cout << "empty ?: " << lst.empty() << std::endl;
-    std::cout << "size: " << lst.size() << std::endl;
-    std::cout << "max size: " << lst.max_size() << std::endl;
+    std::cout << "empty ?: " << list.empty() << std::endl;
+    std::cout << "size: " << list.size() << std::endl;
+    std::cout << "max size: " << list.max_size() << std::endl;
 
-    lst.pop_front();
-    list_enum(lst);
+    list.pop_front();
+    list_test(list);
 
-    std::cout << "empty ?: " << lst.empty() << std::endl;
-    std::cout << "size: " << lst.size() << std::endl;
+    std::cout << "empty ?: " << list.empty() << std::endl;
+    std::cout << "size: " << list.size() << std::endl;
 
-    lst.clear();
-    list_enum(lst);
-    std::cout << "empty ?: " << lst.empty() << std::endl;
-    std::cout << "size: " << lst.size() << std::endl;
+    list.clear();
+    list_test(list);
+    std::cout << "empty ?: " << list.empty() << std::endl;
+    std::cout << "size: " << list.size() << std::endl;
 }
 
-void    lst_test_access() {
-    std::cout << "\e[0;34m----------ACCESS----------" << std::endl;
+void    list_test_access() {
+    std::cout << "----------ACCESS----------" << std::endl;
 
-    ft::List<int> lst;
-    lst.push_front(111);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(999);
+    ft::List<int> list;
+    list.push_front(111);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(777);
 
-    list_enum(lst);
+    list_test(list);
 
-    std::cout << "front: " << lst.front() << std::endl;
-    std::cout << "back: " << lst.back() << std::endl;
+    std::cout << "front: " << list.front() << std::endl;
+    std::cout << "back: " << list.back() << std::endl;
 
-    lst.clear();
+    list.clear();
 }
 
-void    lst_test_assign() {
-    std::cout << "\e[0;34m----------ASSIGN----------" << std::endl;
+void    list_test_assign() {
+    std::cout << "----------ASSIGN----------" << std::endl;
 
-    ft::List<int> lst;
-    lst.push_front(111);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(999);
+    ft::List<int> list;
+    list.push_front(111);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(777);
 
-    list_enum(lst);
+    list_test(list);
 
     std::cout <<  "Assign" << std::endl;
-    lst.assign((size_t)8, (const int)42);
-    list_enum(lst);
+    list.assign((size_t)8, (const int)42);
+    list_test(list);
 
-    ft::List<int> lst2;
-    lst2.push_front(111);
-    lst2.push_front(0);
-    lst2.push_front(0);
-    lst2.push_front(0);
-    lst2.push_front(999);
+    ft::List<int> list2;
+    list2.push_front(111);
+    list2.push_front(0);
+    list2.push_front(0);
+    list2.push_front(0);
+    list2.push_front(777);
 
-    std::cout << "lst2" << std::endl;
-    list_enum(lst2);
+    std::cout << "list2" << std::endl;
+    list_test(list2);
 
     std::cout <<  "Assign" << std::endl;
-    lst.assign(lst2.begin(), lst2.end());
-    list_enum(lst);
+    list.assign(list2.begin(), list2.end());
+    list_test(list);
 
-    lst.clear();
-    lst2.clear();
+    list.clear();
+    list2.clear();
 }
 
-void    lst_test_push_pop() {
-    std::cout << "\e[0;34m----------PUSH & POP----------" << std::endl;
+void    list_test_push_pop() {
+    std::cout << "----------PUSH & POP----------" << std::endl;
 
-    ft::List<int> lst;
-    lst.push_front(111);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(999);
+    ft::List<int> list;
+    list.push_front(111);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(777);
 
-    list_enum(lst);
+    list_test(list);
 
-    lst.pop_front();
-    list_enum(lst);
+    list.pop_front();
+    list_test(list);
 
-    lst.pop_back();
-    list_enum(lst);
+    list.pop_back();
+    list_test(list);
 
-    lst.push_back(42);
-    list_enum(lst);
+    list.push_back(42);
+    list_test(list);
 
-    lst.clear();
+    list.clear();
 }
 
-void    lst_test_insert() {
-    std::cout << "\e[0;34m----------INSERT----------" << std::endl;
+void    list_test_insert() {
+    std::cout << "----------INSERT----------" << std::endl;
 
-    ft::List<int> lst;
-    lst.push_front(111);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(999);
+    ft::List<int> list;
+    list.push_front(111);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(777);
 
-    list_enum(lst);
+    list_test(list);
 
-    lst.insert(lst.begin(), 42);
-    lst.insert(lst.end(), 42);
+    list.insert(list.begin(), 42);
+    list.insert(list.end(), 42);
 
-    list_enum(lst);
+    list_test(list);
 
-    lst.insert(lst.end(), (size_t)8, 3);
+    list.insert(list.end(), (size_t)8, 3);
 
-    list_enum(lst);
+    list_test(list);
 
-    ft::List<int> lst2(lst);
+    ft::List<int> list2(list);
 
-    lst.insert(lst.end(), lst2.begin(), lst2.end());
+    list.insert(list.end(), list2.begin(), list2.end());
 
-    list_enum(lst);
+    list_test(list);
 
-    lst.clear();
-    lst2.clear();
+    list.clear();
+    list2.clear();
 }
 
-void    lst_test_erase() {
-    std::cout << "\e[0;34m----------ERASE----------" << std::endl;
+void    list_test_erase() {
+    std::cout << "----------ERASE----------" << std::endl;
 
-    ft::List<int> lst;
-    lst.push_front(111);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(999);
+    ft::List<int> list;
+    list.push_front(111);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(777);
 
-    list_enum(lst);
+    list_test(list);
 
-    lst.erase(lst.begin());
+    list.erase(list.begin());
 
-    list_enum(lst);
+    list_test(list);
 
     ft::List<int>::iterator it;
 
-    it = lst.begin();
+    it = list.begin();
     it++;
 
-    lst.erase(it, lst.end());
+    list.erase(it, list.end());
 
-    list_enum(lst);
+    list_test(list);
 
-    lst.clear();    
+    list.clear();    
 }
 
-void    lst_test_swap() {
-    std::cout << "\e[0;34m----------SWAP----------" << std::endl;
+void    list_test_swap() {
+    std::cout << "----------SWAP----------" << std::endl;
 
-    ft::List<int> lst;
-    lst.push_front(111);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(999);
+    ft::List<int> list;
+    list.push_front(111);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(777);
 
-    ft::List<int> lst2;
-    lst2.push_front(42);
-    lst2.push_front(42);
-    lst2.push_front(42);
-    lst2.push_front(42);
-    lst2.push_front(42);
+    ft::List<int> list2;
+    list2.push_front(42);
+    list2.push_front(42);
+    list2.push_front(42);
+    list2.push_front(42);
+    list2.push_front(42);
 
-    std::cout << "\e[1;33mlst" << std::endl;
-    list_enum(lst);
-    std::cout << "lst2" << std::endl;
-    list_enum(lst2);
+    std::cout << "list" << std::endl;
+    list_test(list);
+    std::cout << "list2" << std::endl;
+    list_test(list2);
 
     std::cout << "swap" << std::endl;
-    lst.swap(lst2);
+    list.swap(list2);
 
-    std::cout << "lst" << std::endl;
-    list_enum(lst);
-    std::cout << "lst2" << std::endl;
-    list_enum(lst2);
+    std::cout << "list" << std::endl;
+    list_test(list);
+    std::cout << "list2" << std::endl;
+    list_test(list2);
 }
 
-void    lst_test_resize() {
-    std::cout << "\e[0;34m----------RESIZE----------" << std::endl;
+void    list_test_resize() {
+    std::cout << "----------RESIZE----------" << std::endl;
 
-    ft::List<int> lst;
-    lst.push_front(111);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(999);
+    ft::List<int> list;
+    list.push_front(111);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(777);
 
-    list_enum(lst);
+    list_test(list);
 
-    lst.resize(2);
-    list_enum(lst);
-    lst.resize(8, 42);
-    list_enum(lst);
+    list.resize(2);
+    list_test(list);
+    list.resize(8, 42);
+    list_test(list);
 }
 
-void    lst_test_clear() {
-    std::cout << "\e[0;34m----------CLEAR----------" << std::endl;
+void    list_test_clear() {
+    std::cout << "----------CLEAR----------" << std::endl;
 
-    ft::List<int> lst;
-    lst.push_front(111);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(999);
+    ft::List<int> list;
+    list.push_front(111);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(777);
 
-    list_enum(lst);
-    lst.clear();
-    list_enum(lst);
+    list_test(list);
+    list.clear();
+    list_test(list);
 }
 
-void    lst_test_splice() {
-    std::cout << "\e[0;34m----------SPLICE----------" << std::endl;
+void    list_test_splice() {
+    std::cout << "----------SPLICE----------" << std::endl;
 
-    ft::List<int> lst;
-    lst.push_front(111);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(999);
+    ft::List<int> list;
+    list.push_front(111);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(777);
 
-    ft::List<int> lst2;
-    lst2.push_front(42);
-    lst2.push_front(42);
-    lst2.push_front(42);
-    lst2.push_front(42);
-    lst2.push_front(42);
+    ft::List<int> list2;
+    list2.push_front(42);
+    list2.push_front(42);
+    list2.push_front(42);
+    list2.push_front(42);
+    list2.push_front(42);
 
-    std::cout << "\e[1;33mlst" << std::endl;
-    list_enum(lst);
-    std::cout << "lst2" << std::endl;
-    list_enum(lst2);
+    std::cout << "list" << std::endl;
+    list_test(list);
+    std::cout << "list2" << std::endl;
+    list_test(list2);
 
     std::cout << "splice" << std::endl;
-    lst.splice(lst.end(), lst2);
-    std::cout << "\e[1;33mlst" << std::endl;
-    list_enum(lst);
-    std::cout << "lst2" << std::endl;
-    list_enum(lst2);
+    list.splice(list.end(), list2);
+    std::cout << "list" << std::endl;
+    list_test(list);
+    std::cout << "list2" << std::endl;
+    list_test(list2);
 
     std::cout << "splice" << std::endl;
-    lst2.splice(lst2.end(), lst, lst.begin());
-    std::cout << "\e[1;33mlst" << std::endl;
-    list_enum(lst);
-    std::cout << "lst2" << std::endl;
-    list_enum(lst2);
+    list2.splice(list2.end(), list, list.begin());
+    std::cout << "list" << std::endl;
+    list_test(list);
+    std::cout << "list2" << std::endl;
+    list_test(list2);
 
     ft::List<int>::iterator it;
-    it = lst.begin();
+    it = list.begin();
     it++;
 
     std::cout << "splice" << std::endl;
-    lst2.splice(lst2.end(), lst, it, lst.end());
-    std::cout << "\e[1;33mlst" << std::endl;
-    list_enum(lst);
-    std::cout << "lst2" << std::endl;
-    list_enum(lst2);
+    list2.splice(list2.end(), list, it, list.end());
+    std::cout << "list" << std::endl;
+    list_test(list);
+    std::cout << "list2" << std::endl;
+    list_test(list2);
 }
 
-void    lst_test_remove() {
-    std::cout << "\e[0;34m----------REMOVE----------" << std::endl;
+void    list_test_remove() {
+    std::cout << "----------REMOVE----------" << std::endl;
 
-    ft::List<int> lst;
-    lst.push_front(111);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(999);
+    ft::List<int> list;
+    list.push_front(111);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(777);
 
-    list_enum(lst);
+    list_test(list);
 
-    lst.remove(0);
-    list_enum(lst);
+    list.remove(0);
+    list_test(list);
 }
 
 bool predicate1(int i) {
@@ -379,153 +361,153 @@ bool predicate2(int i) {
     return i > 1;
 }
 
-void    lst_test_remove_if() {
-    std::cout << "\e[0;34m----------REMOVE IF----------" << std::endl;
+void    list_test_remove_if() {
+    std::cout << "----------REMOVE IF----------" << std::endl;
 
-    ft::List<int> lst;
-    lst.push_front(111);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(999);
+    ft::List<int> list;
+    list.push_front(111);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(777);
 
-    list_enum(lst);
+    list_test(list);
     
-    lst.remove_if(&predicate1);
+    list.remove_if(&predicate1);
 
-    list_enum(lst);
+    list_test(list);
 
-    lst.remove_if(&predicate2);
+    list.remove_if(&predicate2);
 
-    list_enum(lst);
+    list_test(list);
 }
 
-void    lst_test_unique() {
-    std::cout << "\e[0;34m----------UNIQUE----------" << std::endl;
+void    list_test_unique() {
+    std::cout << "----------UNIQUE----------" << std::endl;
 
-    ft::List<int> lst;
-    lst.push_front(111);
-    lst.push_front(111);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(999);
-    lst.push_front(999);
+    ft::List<int> list;
+    list.push_front(111);
+    list.push_front(111);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(777);
+    list.push_front(777);
 
-    list_enum(lst);
+    list_test(list);
 
-    lst.unique();
+    list.unique();
 
-    list_enum(lst);
+    list_test(list);
 }
 
-void    lst_test_merge_sort_reverse() {
-    std::cout << "\e[0;34m----------MERGE SORT REVERSE----------" << std::endl;
+void    list_test_merge_sort_reverse() {
+    std::cout << "----------MERGE SORT REVERSE----------" << std::endl;
 
-    ft::List<int> lst;
-    lst.push_front(111);
-    lst.push_front(111);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(999);
-    lst.push_front(999);
+    ft::List<int> list;
+    list.push_front(111);
+    list.push_front(111);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(777);
+    list.push_front(777);
 
-    ft::List<int> lst2;
-    lst2.push_front(1);
-    lst2.push_front(2);
-    lst2.push_front(3);
-    lst2.push_front(4);
-    lst2.push_front(5);
-    lst2.push_front(6);
-    lst2.push_front(7);
-    lst2.push_front(8);
-    lst2.push_front(9);
+    ft::List<int> list2;
+    list2.push_front(1);
+    list2.push_front(2);
+    list2.push_front(3);
+    list2.push_front(4);
+    list2.push_front(5);
+    list2.push_front(6);
+    list2.push_front(7);
+    list2.push_front(8);
+    list2.push_front(9);
 
-    std::cout << "\e[1;33mlst" << std::endl;
-    list_enum(lst);
-    std::cout << "lst2" << std::endl;
-    list_enum(lst2);
+    std::cout << "list" << std::endl;
+    list_test(list);
+    std::cout << "list2" << std::endl;
+    list_test(list2);
 
     std::cout << "sort" << std::endl;
-    lst.sort();
-    lst2.sort();
+    list.sort();
+    list2.sort();
 
-    std::cout << "\e[1;33mlst" << std::endl;
-    list_enum(lst);
-    std::cout << "lst2" << std::endl;
-    list_enum(lst2);
+    std::cout << "list" << std::endl;
+    list_test(list);
+    std::cout << "list2" << std::endl;
+    list_test(list2);
 
     std::cout << "merge" << std::endl;
-    lst.merge(lst2);
+    list.merge(list2);
 
-    std::cout << "\e[1;33mlst" << std::endl;
-    list_enum(lst);
-    std::cout << "lst2" << std::endl;
-    list_enum(lst2);
+    std::cout << "list" << std::endl;
+    list_test(list);
+    std::cout << "list2" << std::endl;
+    list_test(list2);
 
     std::cout << "reverse" << std::endl;
-    lst.reverse();
+    list.reverse();
 
-    std::cout << "\e[1;33mlst" << std::endl;
-    list_enum(lst);
-    std::cout << "lst2" << std::endl;
-    list_enum(lst2);
+    std::cout << "list" << std::endl;
+    list_test(list);
+    std::cout << "list2" << std::endl;
+    list_test(list2);
 }
 
-void    lst_test_relational_operators() {
-    std::cout << "\e[0;34m----------RELATIONAL OPERTORS----------" << std::endl;
+void    list_test_relational_operators() {
+    std::cout << "----------RELATIONAL OPERTORS----------" << std::endl;
 
-	ft::List<int> lst;
-    lst.push_front(111);
-    lst.push_front(111);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(0);
-    lst.push_front(999);
-    lst.push_front(999);
-	ft::List<int> lst2(lst);
+	ft::List<int> list;
+    list.push_front(111);
+    list.push_front(111);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(0);
+    list.push_front(777);
+    list.push_front(777);
+	ft::List<int> list2(list);
 
-    std::cout << "\e[1;33mlst" << std::endl;
-    list_enum(lst);
-    std::cout << "lst2" << std::endl;
-    list_enum(lst2);
+    std::cout << "list" << std::endl;
+    list_test(list);
+    std::cout << "list2" << std::endl;
+    list_test(list2);
 
-	std::cout << (lst == lst2) << std::endl;
-	std::cout << (lst >= lst2) << std::endl;
-	std::cout << (lst <= lst2) << std::endl;
+	std::cout << (list == list2) << std::endl;
+	std::cout << (list >= list2) << std::endl;
+	std::cout << (list <= list2) << std::endl;
 
-	lst2.push_back(50);
-	std::cout << (lst != lst2) << std::endl;
-	std::cout << (lst < lst2) << std::endl;
-	std::cout << (lst <= lst2) << std::endl;
-	std::cout << (lst2 > lst) << std::endl;
-	std::cout << (lst2 >= lst) << std::endl;
+	list2.push_back(50);
+	std::cout << (list != list2) << std::endl;
+	std::cout << (list < list2) << std::endl;
+	std::cout << (list <= list2) << std::endl;
+	std::cout << (list2 > list) << std::endl;
+	std::cout << (list2 >= list) << std::endl;
 
-	lst.push_back(200);
-	std::cout << (lst != lst2) << std::endl;
-	std::cout << (lst > lst2) << std::endl;
-	std::cout << (lst >= lst2) << std::endl;
-	std::cout << (lst2 < lst) << std::endl;
-	std::cout << (lst2 <= lst) << std::endl;
+	list.push_back(200);
+	std::cout << (list != list2) << std::endl;
+	std::cout << (list > list2) << std::endl;
+	std::cout << (list >= list2) << std::endl;
+	std::cout << (list2 < list) << std::endl;
+	std::cout << (list2 <= list) << std::endl;
 }
 
 
 void testList() {
-	lst_test_iterator();
-    lst_test_capacity();
-    lst_test_access();
-    lst_test_assign();
-    lst_test_push_pop();
-    lst_test_insert(); 
-    lst_test_erase();
-    lst_test_swap();
-    lst_test_resize();
-    lst_test_clear();
-    lst_test_splice();
-    lst_test_remove();
-    lst_test_remove_if();
-    lst_test_unique();
-    lst_test_merge_sort_reverse();
-    lst_test_relational_operators();
+	list_test_iterator();
+    list_test_capacity();
+    list_test_access();
+    list_test_assign();
+    list_test_push_pop();
+    list_test_insert(); 
+    list_test_erase();
+    list_test_swap();
+    list_test_resize();
+    list_test_clear();
+    list_test_splice();
+    list_test_remove();
+    list_test_remove_if();
+    list_test_unique();
+    list_test_merge_sort_reverse();
+    list_test_relational_operators();
 }

@@ -6,19 +6,15 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 11:20:37 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/01/25 14:51:40 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/01/25 14:56:08 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 
-# include <limits>
 # include <sstream>
-# include <memory>
-# include <stdexcept>
 # include "TurnedIterator.hpp"
-# include "Utils.hpp"
 
 namespace ft
 {

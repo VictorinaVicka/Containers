@@ -6,17 +6,17 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 16:32:23 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/01/26 17:17:11 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/01/26 17:58:37 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 
 void testList();
-void testQueue();
 void testVector();
-void testStack();
 void testMap();
+void testStack();
+void testQueue();
 
 int main()
 {
