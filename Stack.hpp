@@ -6,7 +6,7 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 15:53:39 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/02/01 12:11:31 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/02/01 21:24:57 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,26 +35,26 @@ namespace ft
 			return ;
 		}
 
-		~Stack(void)
+		~Stack()
 		{
 			return ;
 		}
 
 		// Member functions:
 
-		Stack(const Stack &stack)
+		Stack(const Stack &copy)
 		{
-			*this = stack;
+			*this = copy;
 			return ;
 		}
 
-		Stack &operator=(const Stack &stack)
+		Stack &operator=(const Stack &target)
 		{
-			cont = stack.cont;
+			cont = target.cont;
 			return (*this);
 		}
 
-		bool empty(void) const
+		bool empty() const
 		{
 			return (cont.empty());
 		}
@@ -64,22 +64,22 @@ namespace ft
 			cont.push_back(val);
 		}
 
-		void pop (void)
+		void pop ()
 		{
 			cont.pop_back();
 		}
 
-		size_type size(void) const
+		size_type size() const
 		{
 			return (cont.size());
 		}
 
-		value_type	&top(void)
+		value_type	&top()
 		{
 			return (cont.back());
 		}
 
-		const value_type &top(void) const
+		const value_type &top() const
 		{
 			return (cont.back());
 		}

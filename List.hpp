@@ -6,7 +6,7 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 16:54:36 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/01/31 16:11:43 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/02/01 21:27:48 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ namespace ft
 	public:
 		typedef T value_type;
 		typedef Alloc allocator_type;
-		typedef T	&reference;
+		typedef T &reference;
 		typedef const T	&const_reference;
-		typedef	T	*pointer;
+		typedef	T *pointer;
 		typedef	const T	*const_pointer;
 		typedef ft::ListIt<T>	iterator;
 		typedef ft::ConstListIt<T>	const_iterator;
@@ -61,15 +61,7 @@ namespace ft
 			return ;
 		}
 
-		~List(void)
-		{
-			clear();
-			delete(start);
-			delete(stop);
-			return ;
-		}
-
-		List(const List &list)
+		List(const List &copy)
 		{
 			start = new Node<T>();
 			stop = new Node<T>();
@@ -80,27 +72,35 @@ namespace ft
 			origin = stop;
 			finish = stop;
 			len = 0;
-			*this = list;
+			*this = copy;
 			return ;
 		}
 
-		List &operator=(const List &list)
+		List &operator=(const List &target)
 		{
 			Node<T>	*node;
 
 			clear();
-			alloc = list.alloc;
+			alloc = target.alloc;
 			len = 0;
-			if (list.len)
+			if (target.len)
 			{
-				node = list.origin;
-				while (node != list.stop)
+				node = target.origin;
+				while (node != target.stop)
 				{
 					push_back(*node->data);
 					node = node->next;
 				}
 			}
 			return (*this);
+		}
+
+		~List()
+		{
+			clear();
+			delete(start);
+			delete(stop);
+			return ;
 		}
 
 		explicit List (size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type())
@@ -121,7 +121,7 @@ namespace ft
 		template <class InputIterator>
   		List (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
 		{
-			alloc = alloc;
+			this->alloc = alloc;
 			start = new Node<T>();
 			start->prev = NULL;
 			stop = new Node<T>();
@@ -136,81 +136,81 @@ namespace ft
 
 		// Iterators:
 
-		iterator begin(void)
+		iterator begin()
 		{
 			return (iterator(origin));
 		}
 
-		const_iterator	begin(void) const
+		const_iterator	begin() const
 		{
 			return (const_iterator((origin)));
 		}
 
-		iterator end(void)
+		iterator end()
 		{
 			return (iterator(stop));
 		}
 
-		const_iterator	end(void) const
+		const_iterator	end() const
 		{
 			return (const_iterator(stop));
 		}
 
-		reverse_iterator rbegin(void)
+		reverse_iterator rbegin()
 		{
 			return (reverse_iterator(finish));
 		}
 
-		const_reverse_iterator	rbegin(void) const
+		const_reverse_iterator	rbegin() const
 		{
 			return (const_reverse_iterator(finish));
 		}
 
-		reverse_iterator rend(void)
+		reverse_iterator rend()
 		{
 			return (reverse_iterator(start));
 		}
 
-		const_reverse_iterator	rend(void) const
+		const_reverse_iterator	rend() const
 		{
 			return (const_reverse_iterator(start));
 		}
 
 		// Capacity:
 
-		bool	empty(void) const
+		bool	empty() const
 		{
 			return (!len);
 		}
 
-		size_type	size(void) const
+		size_type	size() const
 		{
 			return (len);
 		}
 
-		size_type	max_size(void) const
+		size_type	max_size() const
 		{
 			return (std::numeric_limits<size_type>::max()/sizeof(origin));
 		}
 
 		// Element access:
 
-		reference	front(void)
+		reference	front()
 		{
 			return (*origin->data);
 		}
 
-		const_reference	front(void) const
+		const_reference	front() const
 		{
 			return (*origin->data);
 		}
 
-		reference	back(void)
+		reference	back()
 		{
 			return (*finish->data);
 		}
 
-		const_reference	back(void) const
+		const_reference	back() const
 		{
 			return (*finish->data);
 		}
@@ -235,7 +235,7 @@ namespace ft
 			insert(begin(), val);
 		}
 
-		void pop_front(void)
+		void pop_front()
 		{
 			erase(begin());
 		}
@@ -245,7 +245,7 @@ namespace ft
 			insert(end(), val);
 		}
 
-		void pop_back(void)
+		void pop_back()
 		{
 			iterator it = end();
 			it--;
@@ -364,7 +364,7 @@ namespace ft
 		iterator	erase(iterator first, iterator last)
 		{
 			iterator node;
-		
+
 			while (first != last)
 			{
 				node = first;
@@ -406,7 +406,7 @@ namespace ft
 			}
 		}
 
-		void clear(void)
+		void clear()
 		{
 			erase(begin(), end());
 		}
@@ -454,7 +454,7 @@ namespace ft
 			}
 		}
 
-		void	unique(void)
+		void	unique()
 		{
 			iterator 	it;
 			iterator	it2;
@@ -555,7 +555,7 @@ namespace ft
 			x.finish->prev = NULL;
 		}
 
-		void sort(void)
+		void sort()
 		{
 			iterator it;
 			iterator it2;
@@ -604,7 +604,7 @@ namespace ft
 			}
 		}
 
-		void reverse(void)
+		void reverse()
 		{
 			iterator it;
 			size_type size;

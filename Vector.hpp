@@ -6,7 +6,7 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 11:20:37 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/02/01 21:20:27 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/02/01 21:28:58 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,54 +104,54 @@ namespace ft
 			assign(static_cast<InputIt>(first), static_cast<InputIt>(last));
 		}
 
-		iterator begin(void)
+		iterator begin()
 		{
 			return (iterator(&(arr[0 + 1])));
 		}
 
-		const_iterator begin(void) const
+		const_iterator begin() const
 		{
 			return (const_iterator(&(arr[0 + 1])));
 		}
 
-		iterator end(void)
+		iterator end()
 		{
 			return (iterator(&(arr[newSize + 1])));
 		}
 
-		const_iterator end(void) const
+		const_iterator end() const
 		{
 			return (const_iterator(&(arr[newSize + 1])));
 		}
 
-		reverse_iterator rbegin(void)
+		reverse_iterator rbegin()
 		{
 			return (reverse_iterator(&(arr[newSize])));
 		}
 
-		const_reverse_iterator	rbegin(void) const
+		const_reverse_iterator	rbegin() const
 		{
 			return (const_reverse_iterator(&(arr[newSize])));
 		}
 
-		reverse_iterator rend(void)
+		reverse_iterator rend()
 		{
 			return (reverse_iterator(&(arr[0])));
 		}
 
-		const_reverse_iterator	rend(void) const
+		const_reverse_iterator	rend() const
 		{
 			return (const_reverse_iterator(&(arr[0])));
 		}
 
 		// Capacity:
 
-		size_type size(void) const
+		size_type size() const
 		{
 			return (newSize);
 		}
 
-		size_type max_size(void) const
+		size_type max_size() const
 		{
 			return (std::numeric_limits<size_type>::max()/sizeof(value_type));
 		}
@@ -164,12 +164,12 @@ namespace ft
 				erase(begin() + n, end());
 		}
 
-		size_type capacity(void) const
+		size_type capacity() const
 		{
 			return (newType);
 		}
 
-		bool empty(void) const
+		bool empty() const
 		{
 			return (!newSize);
 		}
@@ -231,22 +231,22 @@ namespace ft
 			return (arr[n + 1]);
 		}
 
-		reference front(void)
+		reference front()
 		{
 			return (arr[0]);
 		}
 
-		const_reference front(void) const
+		const_reference front() const
 		{
 			return (arr[0]);
 		}
 
-		reference back(void)
+		reference back()
 		{
 			return (arr[newSize]);
 		}
 
-		const_reference back(void) const
+		const_reference back() const
 		{
 			return (arr[newSize]);
 		}
@@ -271,7 +271,7 @@ namespace ft
 			insert(end(), val);
 		}
 
-		void pop_back(void)
+		void pop_back()
 		{
 			if (newSize)
 				newSize--;
@@ -372,7 +372,7 @@ namespace ft
 			x.alloc = allocatortype_temp;
 		}
 
-		void clear(void)
+		void clear()
 		{
 			erase(begin(), end());
 		}

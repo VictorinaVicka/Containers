@@ -6,7 +6,7 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 14:27:25 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/01/30 14:45:07 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/02/01 21:33:13 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,33 +44,33 @@ namespace ft
 	protected:
 		Node<T>	*newNode;
 	public:
-		typedef T								value_type;
-		typedef T								&reference;
-		typedef T								*pointer;
-		typedef Category						category;
-		typedef std::ptrdiff_t					difference_type;
+		typedef T value_type;
+		typedef T &reference;
+		typedef T *pointer;
+		typedef Category category;
+		typedef std::ptrdiff_t difference_type;
 
-		ListIt(void) {}
+		ListIt() {}
 
-		~ListIt(void) {}
-
-		ListIt(const ListIt &it)
+		ListIt(const ListIt &copy)
 		{
-			*this = it;
+			*this = copy;
 		}
 
-		ListIt &operator=(const ListIt &c)
+		ListIt &operator=(const ListIt &target)
 		{
-			newNode = c.newNode;
+			newNode = target.newNode;
 			return (*this);
 		}
+
+		~ListIt() {}
 
 		ListIt(Node<T> *list)
 		{
 			newNode = list;
 		}
 
-		ListIt &operator++(void)
+		ListIt &operator++()
 		{
 			if (newNode && newNode->next)
 				newNode = newNode->next;
@@ -84,7 +84,7 @@ namespace ft
 			return (tmp);
 		}
 
-		ListIt &operator--(void)
+		ListIt &operator--()
 		{
 			if (newNode && newNode->prev)
 				newNode = newNode->prev;
@@ -108,17 +108,17 @@ namespace ft
 			return (newNode != c.newNode);
 		}
 
-		T &operator*(void)
+		T &operator*()
 		{
 			return (*newNode->data);
 		}
 
-		T *operator->(void)
+		T *operator->()
 		{
 			return (newNode->data);
 		}
 
-		Node<T> *getNewNode(void)
+		Node<T> *getNewNode()
 		{
 			return (newNode);
 		}
@@ -128,47 +128,48 @@ namespace ft
 	class ReverseListIt : public ListIt<T>
 	{
 	public:
-		ReverseListIt(void) {}
-		~ReverseListIt(void) {}
+		ReverseListIt() {}
 
-		ReverseListIt(Node<T> *list)
+		ReverseListIt(Node<T> *copy)
 		{
-			this->newNode = list;
+			this->newNode = copy;
 		}
 
-		ReverseListIt(const ReverseListIt &it)
+		ReverseListIt(const ReverseListIt &target)
 		{
-			*this = it;
+			*this = target;
 		}
 
-		ReverseListIt			&operator=(const ReverseListIt &it)
+		~ReverseListIt() {}
+
+		ReverseListIt &operator=(const ReverseListIt &target)
 		{
-			this->newNode = it.newNode;
+			this->newNode = target.newNode;
 			return (*this);
 		}
 
-		ReverseListIt			&operator++(void)
+		ReverseListIt &operator++()
 		{
 			if (this->newNode && this->newNode->prev)
 				this->newNode = this->newNode->prev;
 			return (*this);
 		}
 
-		ReverseListIt			operator++(int)
+		ReverseListIt operator++(int)
 		{
 			ReverseListIt tmp(*this);
 			this->operator++();
 			return (tmp);
 		}
 
-		ReverseListIt			&operator--(void)
+		ReverseListIt &operator--()
 		{
 			if (this->newNode && this->newNode->next)
 				this->newNode = this->newNode->next;
 			return (*this);
 		}
 
-		ReverseListIt			operator--(int)
+		ReverseListIt operator--(int)
 		{
 			ReverseListIt tmp(*this);
 			this->operator--();
@@ -180,26 +181,27 @@ namespace ft
 	class ConstListIt : public ListIt<T>
 	{
 	public:
-		ConstListIt(void) {}
-		~ConstListIt(void) {}
+		ConstListIt() {}
 
 		ConstListIt(Node<T> *list)
 		{
 			this->newNode = list;
 		}
 
-		ConstListIt(const ConstListIt &it)
+		ConstListIt(const ConstListIt &copy)
 		{
-			*this = it;
+			*this = copy;
 		}
 
-		ConstListIt			&operator=(const ConstListIt &it)
+		ConstListIt &operator=(const ConstListIt &target)
 		{
-			this->newNode = it.newNode;
+			this->newNode = target.newNode;
 			return (*this);
 		}
 
-		const T						&operator*(void) // dereferenced lvalue
+		~ConstListIt() {}
+
+		const T &operator*()
 		{
 			return (*this->newNode->data);
 		}
@@ -209,26 +211,27 @@ namespace ft
 	class ConstReverseListIt : public ReverseListIt<T>
 	{
 	public:
-		ConstReverseListIt(void) {}
-		~ConstReverseListIt(void) {}
+		ConstReverseListIt() {}
 
 		ConstReverseListIt(Node<T> *list)
 		{
 			this->newNode = list;
 		}
 
-		ConstReverseListIt(const ConstReverseListIt &it)
+		ConstReverseListIt(const ConstReverseListIt &copy)
 		{
-			*this = it;
+			*this = copy;
 		}
 
-		ConstReverseListIt			&operator=(const ConstReverseListIt &it)
+		ConstReverseListIt &operator=(const ConstReverseListIt &target)
 		{
-			this->newNode = it.newNode;
+			this->newNode = target.newNode;
 			return (*this);
 		}
 
-		const T						&operator*(void) // dereferenced lvalue
+		~ConstReverseListIt() {}
+
+		const T &operator*()
 		{
 			return (*this->newNode->data);
 		}

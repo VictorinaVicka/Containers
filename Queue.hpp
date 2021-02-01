@@ -6,7 +6,7 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 15:53:50 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/02/01 12:13:56 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/02/01 21:25:41 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,51 +35,51 @@ namespace ft
 			return ;
 		}
 
-		~Queue(void)
+		~Queue()
 		{
 			return ;
 		}
 
 		// Member functions:
 
-		Queue(const Queue &queue)
+		Queue(const Queue &copy)
 		{
-			*this = queue;
+			*this = copy;
 			return ;
 		}
 
-		Queue &operator=(const Queue &queue)
+		Queue &operator=(const Queue &target)
 		{
-			cont = queue.cont;
+			cont = target.cont;
 			return (*this);
 		}
 
-		value_type &back(void)
+		value_type &back()
 		{
 			return (cont.back());
 		}
 
-		const value_type &back(void) const
+		const value_type &back() const
 		{
 			return (cont.back());
 		}
 
-		bool empty(void) const
+		bool empty() const
 		{
 			return (cont.empty());
 		}
 
-		value_type &front(void)
+		value_type &front()
 		{
 			return (cont.front());
 		}
 
-		const value_type &front(void) const
+		const value_type &front() const
 		{
 			return (cont.front());
 		}
 
-		void pop(void)
+		void pop()
 		{
 			return (cont.pop_front());
 		}
@@ -89,7 +89,7 @@ namespace ft
 			return (cont.push_back(val));
 		}
 
-		size_type size(void) const
+		size_type size() const
 		{
 			return (cont.size());
 		}
