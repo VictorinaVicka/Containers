@@ -6,7 +6,7 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 13:31:56 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/02/01 17:30:58 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/02/01 21:43:32 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,7 @@ namespace ft
 
 	public:
 
-		VectorIt(void) {}
-
-		~VectorIt(void) {}
+		VectorIt() {}
 
 		VectorIt(const VectorIt &it)
 		{
@@ -53,7 +51,9 @@ namespace ft
 			point = ptr;
 		}
 
-		VectorIt &operator++(void)
+		~VectorIt() {}
+
+		VectorIt &operator++()
 		{
 			point++;
 			return (*this);
@@ -66,7 +66,7 @@ namespace ft
 			return (ptr);
 		}
 
-		VectorIt &operator--(void)
+		VectorIt &operator--()
 		{
 			point--;
 			return (*this);
@@ -89,29 +89,29 @@ namespace ft
 			return (point != target.point);
 		}
 
-		T &operator*(void)
+		T &operator*()
 		{
 			return (*point);
 		}
 
-		T *operator->(void)
+		T *operator->()
 		{
 			return (point);
 		}
 
-		VectorIt operator+(int n) const
+		VectorIt operator+(int target) const
 		{
 			VectorIt ptr(*this);
 
-			ptr += n;
+			ptr += target;
 			return (ptr);
 		}
 
-		VectorIt operator-(int n) const
+		VectorIt operator-(int target) const
 		{
 			VectorIt ptr(*this);
 
-			ptr -= n;
+			ptr -= target;
 			return (ptr);
 		}
 
@@ -135,42 +135,42 @@ namespace ft
 			return (point >= target.point);
 		}
 
-		VectorIt &operator+=(int n)
+		VectorIt &operator+=(int target)
 		{
-			while (n < 0)
+			while (target < 0)
 			{
-				n++;
+				target++;
 				operator--();
 			}
-			while (n > 0)
+			while (target > 0)
 			{
-				n--;
+				target--;
 				operator++();
 			}
 			return (*this);
 		}
 
-		VectorIt &operator-=(int n)
+		VectorIt &operator-=(int target)
 		{
-			while (n < 0)
+			while (target < 0)
 			{
-				n++;
+				target++;
 				operator++();
 			}
-			while (n > 0)
+			while (target > 0)
 			{
-				n--;
+				target--;
 				operator--();
 			}
 			return (*this);
 		}
 
-		T &operator[](int n) const
+		T &operator[](int target) const
 		{
-			return (*(*this + n));
+			return (*(*this + target));
 		}
 
-		pointer	getPoint(void) const
+		pointer	getPoint() const
 		{
 			return (point);
 		}
@@ -187,9 +187,7 @@ namespace ft
 		typedef std::ptrdiff_t	difference_type;
 
 	public:
-		ReverseVectorIt(void) {}
-
-		~ReverseVectorIt(void) {}
+		ReverseVectorIt() {}
 
 		ReverseVectorIt(pointer ptr)
 		{
@@ -207,7 +205,9 @@ namespace ft
 			return (*this);
 		}
 
-		ReverseVectorIt	&operator++(void)
+		~ReverseVectorIt() {}
+
+		ReverseVectorIt	&operator++()
 		{
 			this->point--;
 			return (*this);
@@ -220,22 +220,22 @@ namespace ft
 			return (ptr);
 		}
 
-		ReverseVectorIt	&operator+=(int n) const
+		ReverseVectorIt	&operator+=(int target) const
 		{
-			while (n < 0)
+			while (target < 0)
 			{
-				n++;
+				target++;
 				this++;
 			}
-			while (n > 0)
+			while (target > 0)
 			{
-				n--;
+				target--;
 				this--;
 			}
 			return (*this);
 		}
 
-		ReverseVectorIt	&operator--(void)
+		ReverseVectorIt	&operator--()
 		{
 			this->point++;
 			return (*this);
@@ -248,24 +248,24 @@ namespace ft
 			return (ptr);
 		}
 
-		ReverseVectorIt	&operator-=(int n) const
+		ReverseVectorIt	&operator-=(int target) const
 		{
-			while (n < 0)
+			while (target < 0)
 			{
-				n++;
+				target++;
 				this--;
 			}
-			while (n > 0)
+			while (target > 0)
 			{
-				n--;
+				target--;
 				this++;
 			}
 			return (*this);
 		}
 
-		T &operator[](int n) const
+		T &operator[](int target) const
 		{
-			return (*(*this - n));
+			return (*(*this - target));
 		}
 	};
 
@@ -273,9 +273,7 @@ namespace ft
 	class ConstVectorIt : public VectorIt<T>
 	{
 	public:
-		ConstVectorIt(void) {}
-
-		~ConstVectorIt(void) {}
+		ConstVectorIt() {}
 
 		ConstVectorIt(T *ptr)
 		{
@@ -293,7 +291,9 @@ namespace ft
 			return (*this);
 		}
 
-		const T	&operator*(void)
+		~ConstVectorIt() {}
+
+		const T	&operator*()
 		{
 			return (*this->point);
 		}
@@ -303,9 +303,7 @@ namespace ft
 	class ConstReverseVectorIt : public ReverseVectorIt<T>
 	{
 	public:
-		ConstReverseVectorIt(void) {}
-
-		~ConstReverseVectorIt(void) {}
+		ConstReverseVectorIt() {}
 
 		ConstReverseVectorIt(T *ptr)
 		{
@@ -323,7 +321,9 @@ namespace ft
 			return (*this);
 		}
 
-		const T	&operator*(void)
+		~ConstReverseVectorIt() {}
+
+		const T	&operator*()
 		{
 			return (*this->point);
 		}
