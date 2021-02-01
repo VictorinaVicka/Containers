@@ -6,121 +6,149 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 15:53:50 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/01/25 11:16:29 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/02/01 12:13:56 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef QUEUE_HPP
 # define QUEUE_HPP
 
-# include "List.hpp"
+# include <deque>
 
-namespace ft {
-
-    template <typename T, typename Container = List<T> >
-	class	Queue
+namespace ft
+{
+	template <class T, class Container = std::deque<T> >
+	class Queue
 	{
 	public:
-		typedef T value_type;
-		typedef Container container_type;
-		typedef size_t size_type;
+		typedef T	value_type;
+		typedef Container	container_type;
+		typedef size_t	size_type;
 
 	private:
-		typedef Queue<T, Container> Self;
-
-        container_type newCntr;
+		container_type	cont;
 
 	public:
-
-		//Member functions:
-
-		explicit Queue(const container_type &cntr = container_type()): newCntr(cntr)
-		{}
-
-        bool empty() const
+		explicit Queue(const container_type& ctnr = container_type())
 		{
-            return newCntr.empty();
-        }
+			cont = ctnr;
+			return ;
+		}
 
-        size_type size() const
+		~Queue(void)
 		{
-            return newCntr.size();
-        }
+			return ;
+		}
 
-        value_type &front()
+		// Member functions:
+
+		Queue(const Queue &queue)
 		{
-            return newCntr.front();
-        }
+			*this = queue;
+			return ;
+		}
 
-        const value_type &front() const
+		Queue &operator=(const Queue &queue)
 		{
-            return newCntr.front();
-        }
+			cont = queue.cont;
+			return (*this);
+		}
 
-        value_type &back()
+		value_type &back(void)
 		{
-            return newCntr.back();
-        }
+			return (cont.back());
+		}
 
-        const value_type &back() const
+		const value_type &back(void) const
 		{
-            return newCntr.back();
-        }
+			return (cont.back());
+		}
 
-        void push(const value_type &val)
+		bool empty(void) const
 		{
-            newCntr.push_back(val);
-        }
+			return (cont.empty());
+		}
 
-        void pop()
+		value_type &front(void)
 		{
-            newCntr.pop_back();
-        }
+			return (cont.front());
+		}
 
-        template <typename _T, typename _Container>
+		const value_type &front(void) const
+		{
+			return (cont.front());
+		}
+
+		void pop(void)
+		{
+			return (cont.pop_front());
+		}
+
+		void push(const value_type &val)
+		{
+			return (cont.push_back(val));
+		}
+
+		size_type size(void) const
+		{
+			return (cont.size());
+		}
+
+		template <typename _T, typename _Container>
 		friend bool operator==(const Queue<_T, _Container> &lhs, const Queue<_T, _Container> &rhs);
 
 		template <typename _T, typename _Container>
 		friend bool operator<(const Queue<_T, _Container> &lhs, const Queue<_T, _Container> &rhs);
 
-    };
+		template <typename _T, typename _Container>
+		friend bool	operator!=(const Queue<_T, _Container> &lhs, const Queue<_T, _Container> &rhs);
 
-	// Non-member function overloads:
+		template <typename _T, typename _Container>
+		friend bool	operator<=(const Queue<_T, _Container> &lhs, const Queue<_T, _Container> &rhs);
 
-    template <typename T, typename Container>
-	bool operator==(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
+		template <typename _T, typename _Container>
+		friend bool	operator>(const Queue<_T, _Container> &lhs, const Queue<_T, _Container> &rhs);
+
+		template <typename _T, typename _Container>
+		friend bool	operator>=(const Queue<_T, _Container> &lhs, const Queue<_T, _Container> &rhs);
+	};
+
+	// Non-member functions:
+
+	template <class T, class Container>
+	bool operator==(const Queue<T,Container> &lhs, const Queue<T,Container> &rhs)
 	{
-		return lhs.newCntr == rhs.newCntr;
+		return (lhs.cont == rhs.cont);
 	}
 
-	template <typename T, typename Container>
-	bool operator!=(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
+	template <class T, class Container>
+	bool operator!=(const Queue<T,Container> &lhs, const Queue<T,Container> &rhs)
 	{
-		return !(lhs == rhs);
+		return (lhs.cont != rhs.cont);
 	}
 
-	template <typename T, typename Container>
-	bool operator<(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
+	template <class T, class Container>
+	bool operator<(const Queue<T,Container> &lhs, const Queue<T,Container> &rhs)
 	{
-		return lhs.newCntr < rhs.newCntr;
+		return (lhs.cont < rhs.cont);
 	}
 
-	template <typename T, typename Container>
-	bool operator>(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
+	template <class T, class Container>
+	bool operator<=(const Queue<T,Container> &lhs, const Queue<T,Container> &rhs)
 	{
-		return rhs < lhs;
+		return (lhs.cont <= rhs.cont);
 	}
 
-	template <typename T, typename Container>
-	bool operator<=(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
+	template <class T, class Container>
+	bool operator>(const Queue<T,Container> &lhs, const Queue<T,Container> &rhs)
 	{
-		return !(lhs > rhs);
+		return (rhs.cont > lhs.cont);
 	}
 
-	template <typename T, typename Container>
-	bool operator>=(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
+	template <class T, class Container>
+	bool operator>=(const Queue<T,Container> &lhs, const Queue<T,Container> &rhs)
 	{
-		return !(lhs < rhs);
+		return (lhs.cont >= rhs.cont);
 	}
 };
 
