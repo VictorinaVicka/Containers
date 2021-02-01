@@ -6,7 +6,7 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 11:20:37 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/01/25 14:56:08 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/02/01 21:20:27 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,293 +14,149 @@
 # define VECTOR_HPP
 
 # include <sstream>
-# include "TurnedIterator.hpp"
+# include "Vector_Iterator.hpp"
 
 namespace ft
 {
-	template <typename T>
-	class Vector;
-
-    template <typename T>
-	class	VectorIt
+	template <class T, class Alloc = std::allocator<T> >
+	class Vector
 	{
 	public:
 		typedef T value_type;
-		typedef T *pointer;
+		typedef Alloc allocator_type;
 		typedef T &reference;
-		typedef	std::ptrdiff_t difference_type;
-        typedef size_t size_type;
-		typedef std::random_access_iterator_tag iterator_category;
-
-	private:
-		typedef VectorIt<T> Self;
-        pointer pr;
-	public:
-		VectorIt(): pr(NULL) {}
-		VectorIt(pointer elem): pr(elem) {}
-		VectorIt(const VectorIt<T> &vector): pr(vector.pr) {}
-		~VectorIt() {}
-
-		template <typename _T>
-		friend class Vector;
-
-		template <typename _T>
-		friend bool operator==(const VectorIt<_T> &lhs, const VectorIt<_T> &rhs);
-
-		template <typename _T>
-		friend bool operator!=(const VectorIt<_T> &lhs, const VectorIt<_T> &rhs);
-
-        template <typename _T>
-	    friend ptrdiff_t operator-(const VectorIt<_T> &lhs, const VectorIt<_T> &rhs);
-
-		Self &operator=(const Self &self)
-		{
-			pr = self.pr;
-			return *this;
-		}
-
-		Self &operator++()
-		{
-			++pr;
-			return *this;
-		}
-
-		Self operator++(int)
-		{
-			Self copy = *this;
-			++pr;
-			return copy;
-		}
-
-		Self &operator--()
-		{
-            --pr;
-			return *this;
-		}
-
-		Self operator--(int)
-		{
-			Self copy = *this;
-			--pr;
-			return copy;
-		}
-
-        Self &operator+=(size_type offset)
-		{
-            pr += offset;
-            return *this;
-        }
-
-        Self &operator-=(size_type offset)
-		{
-            pr -= offset;
-            return *this;
-        }
-
-		reference operator*() const
-		{
-			return *pr;
-		}
-
-		pointer operator->() const
-		{
-			return pr;
-		}
-
-        reference operator[](size_type n)
-		{
-            return *(*this + n);
-        }
-	};
-
-    template <typename T>
-	bool operator==(const VectorIt<T> &lhs, const VectorIt<T> &rhs)
-	{
-		return lhs.pr == rhs.pr;
-	}
-
-	template <typename T>
-	bool operator!=(const VectorIt<T> &lhs, const VectorIt<T> &rhs)
-	{
-		return !(lhs == rhs);
-	}
-
-	template <typename T>
-	bool operator<(const VectorIt<T> &lhs, const VectorIt<T> &rhs)
-	{
-		return lhs.pr < rhs.pr;
-	}
-
-	template <typename T>
-	bool operator>(const VectorIt<T> &lhs, const VectorIt<T> &rhs)
-	{
-		return rhs < lhs;
-	}
-
-	template <typename T>
-	bool operator<=(const VectorIt<T> &lhs, const VectorIt<T> &rhs)
-	{
-		return !(lhs > rhs);
-	}
-
-	template <typename T>
-	bool operator>=(const VectorIt<T> &lhs, const VectorIt<T> &rhs)
-	{
-		return !(lhs < rhs);
-	}
-
-	template <typename T>
-	VectorIt<T> operator+(const VectorIt<T> &it, size_t offset)
-	{
-		VectorIt<T> it2 = it;
-		return it2 += offset;
-	}
-
-	template <typename T>
-	VectorIt<T> operator+(typename VectorIt<T>::difference_type offset, const VectorIt<T> &it)
-	{
-		return it + offset;
-	}
-
-	template <typename T>
-	VectorIt<T> operator-(const VectorIt<T> &it, typename VectorIt<T>::difference_type offset)
-	{
-		VectorIt<T> it2 = it;
-		return it2 -= offset;
-	}
-
-	template <typename T>
-	ptrdiff_t operator-(const VectorIt<T> &lhs, const VectorIt<T> &rhs)
-	{
-		return lhs.pr - rhs.pr;
-	}
-
-    template <typename T>
-	class	Vector {
-	public:
-		typedef T value_type;
-		typedef T &reference;
-		typedef const T &const_reference;
-		typedef T *pointer;
-		typedef const T *const_pointer;
-		typedef VectorIt<T> iterator;
-		typedef const VectorIt<const T> const_iterator;
-		typedef TurnedIterator<iterator> reverse_iterator;
-		typedef const TurnedIterator<const_iterator> const_reverse_iterator;
-		typedef std::ptrdiff_t difference_type;
+		typedef const T	&const_reference;
+		typedef	T *pointer;
+		typedef	const T	*const_pointer;
+		typedef ft::VectorIt<T>	iterator;
+		typedef ft::ConstVectorIt<T> const_iterator;
+		typedef ft::ReverseVectorIt<T>	reverse_iterator;
+		typedef ft::ConstReverseVectorIt<T>	const_reverse_iterator;
+		typedef typename ft::ReverseVectorIt<T>::difference_type difference_type;
 		typedef size_t size_type;
 
 	private:
-		typedef Vector<T> Self;
-
-		size_type newSize;
-        size_type newType;
-        pointer array;
+		allocator_type	alloc;
+		value_type	*arr;
+		size_type	newSize;
+		size_type	newType;
 
 	public:
-
-		//Member functions:
-
-		Vector(): newSize(0), newType(0), array(NULL)
-		{}
-
-		Vector(size_type n, const value_type &val = value_type()): newSize(0), newType(0), array(NULL)
+		explicit Vector(const allocator_type& alloc = allocator_type())
 		{
-			insert(begin(), n, val);
+			this->alloc = alloc;
+			arr = this->alloc.allocate(2);
+			newSize = 0;
+			newType = 0;
+			return ;
 		}
 
-		template <typename InputIterator>
-		Vector(InputIterator first, InputIterator last): newSize(0), newType(0), array(NULL)
+		Vector(const Vector &copy)
 		{
-			insert(begin(), first, last);
+			alloc = copy.alloc;
+			arr = alloc.allocate(2);
+			newSize = 0;
+			newType = 0;
+			*this = copy;
+			return ;
 		}
 
-		Vector(const Self &c): newSize(0), newType(0), array(NULL)
+		Vector &operator=(const Vector &target)
 		{
-			insert(begin(), c.begin(), c.end());
+			size_type size;
+
+			clear();
+			alloc.deallocate(arr, newType + 2);
+			alloc = target.alloc;
+			newType = target.newType;
+			arr = alloc.allocate(newType + 2);
+			newSize = target.newSize;
+			size = target.newSize + 1;
+			while (size--)
+				arr[size] = target.arr[size];
+			return (*this);
 		}
 
 		~Vector()
 		{
-            std::allocator<T> alloc;
-            for (size_type i = 0; i < newSize; i++)
-			{
-                alloc.destroy(&array[i]);
-            }
-            alloc.deallocate(array, newType);
+			if (newType > 0)
+				alloc.deallocate(arr, newType);
 		}
 
-		template <typename _T>
-		friend class Vector;
+		// Member functions:
 
-		template <typename _T>
-		friend class VectorIt;
-
-		template <typename Iterator>
-		friend class TurnedIterator;
-
-		Self &operator=(const Vector &x)
+		explicit Vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type())
 		{
-			clear();
-			insert(begin(), x.begin(), x.end());
-			return *this;
+			alloc = alloc;
+			arr = alloc.allocate(2);
+			newSize = 0;
+			newType = 0;
+			assign(static_cast<size_type>(n), static_cast<value_type>(val));
 		}
 
-		// Iterators:
-
-		iterator begin()
+		template <class InputIt>
+		Vector(InputIt first, InputIt last, const allocator_type& alloc = allocator_type())
 		{
-			return array;
+			alloc = alloc;
+			arr = alloc.allocate(2);
+			newSize = 0;
+			newType = 0;
+			assign(static_cast<InputIt>(first), static_cast<InputIt>(last));
 		}
 
-		const_iterator begin() const
+		iterator begin(void)
 		{
-			return array;
+			return (iterator(&(arr[0 + 1])));
 		}
 
-		iterator end()
+		const_iterator begin(void) const
 		{
-			return array + newSize;
+			return (const_iterator(&(arr[0 + 1])));
 		}
 
-		const_iterator end() const
+		iterator end(void)
 		{
-			return array + newSize;
+			return (iterator(&(arr[newSize + 1])));
 		}
 
-		reverse_iterator rbegin()
+		const_iterator end(void) const
 		{
-			return reverse_iterator(end());
+			return (const_iterator(&(arr[newSize + 1])));
 		}
 
-		const_reverse_iterator rbegin() const
+		reverse_iterator rbegin(void)
 		{
-			return const_reverse_iterator(end());
+			return (reverse_iterator(&(arr[newSize])));
 		}
 
-		reverse_iterator rend()
+		const_reverse_iterator	rbegin(void) const
 		{
-			return reverse_iterator(begin());
+			return (const_reverse_iterator(&(arr[newSize])));
 		}
 
-		const_reverse_iterator rend() const
+		reverse_iterator rend(void)
 		{
-			return const_reverse_iterator(begin());
+			return (reverse_iterator(&(arr[0])));
 		}
 
-        // Capacity:
-
-        size_type size() const
+		const_reverse_iterator	rend(void) const
 		{
-            return newSize;
-        }
-
-		size_type max_size() const
-		{
-			return std::numeric_limits<std::size_t>::max() / sizeof(value_type);
+			return (const_reverse_iterator(&(arr[0])));
 		}
 
-        void resize(size_type n, value_type val = value_type())
+		// Capacity:
+
+		size_type size(void) const
+		{
+			return (newSize);
+		}
+
+		size_type max_size(void) const
+		{
+			return (std::numeric_limits<size_type>::max()/sizeof(value_type));
+		}
+
+		void resize(size_type n, value_type val = value_type())
 		{
 			if (n >= newSize)
 				insert(end(), n - newSize, val);
@@ -308,243 +164,289 @@ namespace ft
 				erase(begin() + n, end());
 		}
 
-        size_type capacity() const
+		size_type capacity(void) const
 		{
-            return newType;
-        }
+			return (newType);
+		}
 
-        bool empty() const
+		bool empty(void) const
 		{
-			return newSize == 0;
+			return (!newSize);
 		}
 
 		void reserve(size_type n)
 		{
-			if (n <= newType)
-				return ;
-			if (!n)
-				return ;
-			std::allocator<T> alloc;
-			T *new_array = alloc.allocate(n);
-			for (size_type i = 0; i < newSize; i++)
+			if (n > max_size())
+				throw(std::length_error("max_size done"));
+			if (n > newType)
 			{
-				alloc.construct(&new_array[i], array[i]);
-				alloc.destroy(&array[i]);
+				size_type	tmp;
+				value_type	*newArr;
+
+				newArr = alloc.allocate(n + 2);
+				tmp = newType;
+				newType = n;
+				while (n)
+				{
+					if (n <= newSize + 1)
+						newArr[n] = arr[n];
+					n--;
+				}
+				alloc.deallocate(arr, tmp + 2);
+				arr = newArr;
 			}
-			alloc.deallocate(array, newType);
-			array = new_array;
-			newType = n;
 		}
 
-        // Element access:
+		// Element access:
 
-        reference operator[](size_type n)
+		reference operator[](size_type n)
 		{
-            return array[n];
-        }
+			return (arr[n + 1]);
+		}
 
-        const_reference operator[](size_type n) const
+		const_reference operator[](size_type n) const
 		{
-            return array[n];
-        }
+			return (arr[n + 1]);
+		}
 
-        reference at(size_type n)
+		reference at(size_type n)
 		{
-            if (n >= newSize)
+			if (n >= newSize)
 			{
+				std::stringstream str;
+                str << "index " << n << " out of bound (size() is " << size() << ");";
+				throw std::out_of_range(str.str());
+			}
+			return (arr[n + 1]);
+		}
+
+		const_reference at(size_type n) const
+		{
+			if (n >= newSize)
+				{
                 std::stringstream str;
                 str << "index " << n << " out of bound (size() is " << size() << ");";
                 throw std::out_of_range(str.str());
-            }
-            return array[n];
-        }
+           		}
+			return (arr[n + 1]);
+		}
 
-        const_reference at(size_type n) const
+		reference front(void)
 		{
-            if (n >= newSize)
-			{
-                std::stringstream str;
-                str << "index " << n << " out of bound (size() is " << size() << ");";
-                throw std::out_of_range(str.str());
-            }
-            return array[n];
-        }
+			return (arr[0]);
+		}
 
-        reference front()
+		const_reference front(void) const
 		{
-            return array[0];
-        }
+			return (arr[0]);
+		}
 
-        const_reference front() const
+		reference back(void)
 		{
-            return array[0];
-        }
+			return (arr[newSize]);
+		}
 
-        reference back()
+		const_reference back(void) const
 		{
-            return array[newSize - 1];
-        }
+			return (arr[newSize]);
+		}
 
-        const_reference back() const
-		{
-            return array[newSize - 1];
-        }
+		// Modifiers:
 
-        // Modifiers:
-
-        template <typename InputIterator>
-        void assign(InputIterator first, InputIterator last)
+		template <class InputIt>
+		void assign(InputIt first, InputIt last)
 		{
 			clear();
 			insert(begin(), first, last);
-        }
+		}
 
-        void assign(size_type n, const value_type &val)
+		void assign(size_type n, const value_type &val)
 		{
 			clear();
 			insert(begin(), n, val);
-        }
+		}
 
-        void push_back(const value_type &val)
+		void push_back(const value_type &val)
 		{
 			insert(end(), val);
-        }
+		}
 
-        void pop_back()
+		void pop_back(void)
 		{
-			erase(end() - 1);
-        }
+			if (newSize)
+				newSize--;
+		}
 
-        iterator insert(iterator position, const value_type &val)
+		iterator insert(iterator position, const value_type &val)
 		{
-            insert(position, (size_type)1, val);
-            return position;
+			iterator it;
+			size_t i;
+			size_t j;
+
+			i = newSize + 1;
+			it = end();
+			while (position != it)
+			{
+				arr[i] = arr[i - 1];
+				i--;
+				position++;
+			}
+			arr[i] = val;
+			j = newSize + 1;
+			if ((j) > capacity())
+				reserve(j);
+			newSize++;
+			return (iterator(&arr[i]));
 		}
 
 		void insert(iterator position, size_type n, const value_type &val)
 		{
-            if (!n)
-                return ;
-            std::allocator<T> alloc;
-            size_type ix = position.pr - array;
-            reserve(newSize + n);
-            for (ptrdiff_t i = newSize - 1; i >= (ptrdiff_t)ix; i--)
-			{
-                alloc.construct(&array[i + n], array[i]);
-                alloc.destroy(&array[i]);
-            }
-            for (size_type i = ix; i < ix + n; i++)
-			{
-                alloc.construct(&array[i], val);
-            }
-            newSize += n;
+			while (n--)
+				position = insert(position, val);
 		}
 
-		template <typename InputIterator>
-		void insert(iterator position, InputIterator first, InputIterator last)
+		template <class InputIt>
+		void insert(iterator position, InputIt first, InputIt last)
 		{
-            if (first == last)
-                return ;
-            std::allocator<T> alloc;
-            size_type ix = position.pr - array;
-            size_type count = last - first;
-            reserve(newSize + count);
-            for (ptrdiff_t i = newSize - 1; i >= (ptrdiff_t)ix; i--)
+			while (first != last)
 			{
-                alloc.construct(&array[i + count], array[i]);
-                alloc.destroy(&array[i]);
-            }
-            for (InputIterator it = first; it != last; it++)
-			{
-                alloc.construct(&array[ix++], *it);
-            }
-            newSize += count;
+				position = insert(position, *first);
+				position++;
+				first++;
+			}
 		}
 
 		iterator erase(iterator position)
 		{
-            return erase(position, position + 1);
+			iterator it;
+			iterator it2;
+
+			it2 = position;
+			while (it2 != end())
+			{
+				it = it2;
+				it++;
+				*it2 = *it;
+				it2++;
+			}
+			newSize--;
+			return (position);
 		}
 
 		iterator erase(iterator first, iterator last)
 		{
-			size_type count = last - first;
-			if (count <= 0)
-				return last;
-			size_type ix = first.pr - array;
+			iterator it;
+			iterator it2;
 
-			std::allocator<T> alloc;
-			for (size_type i = ix; i < ix + count; i++)
-				alloc.destroy(&array[i]);
-			for (size_type i = ix + count; i < newSize; i++)
+			it = first;
+			it2 = last;
+			while (last != end())
 			{
-				alloc.construct(&array[i - count], array[i]);
-				alloc.destroy(&array[i]);
+				*it = *last;
+				it++;
+				last++;
 			}
-			newSize -= count;
-			return first;
+			last = it2;
+			it = first;
+			while (it != last)
+			{
+				it++;
+				newSize--;
+			}
+			return (first);
 		}
 
-        void swap(Vector &x)
+		void swap(Vector &x)
 		{
-			std::swap(array, x.array);
-			std::swap(newSize, x.newSize);
-			std::swap(newType, x.newType);
+			value_type *valueType_temp = arr;
+			arr = x.arr;
+			x.arr = valueType_temp;
+			size_type sizetype_temp = newSize;
+			newSize = x.newSize;
+			x.newSize = sizetype_temp;
+			sizetype_temp = newType;
+			newType = x.newType;
+			x.newType = sizetype_temp;
+			allocator_type allocatortype_temp = alloc;
+			alloc = x.alloc;
+			x.alloc = allocatortype_temp;
+		}
 
-        }
-
-        void clear()
+		void clear(void)
 		{
-            erase(begin(), end());
-        }
+			erase(begin(), end());
+		}
 
-    };
+	};
 
 	// Non-member function overloads:
 
-	template <typename T>
-	bool operator==(const Vector<T> &lhs, const Vector<T> &rhs)
+	template <class T, class Alloc>
+	bool operator==(const Vector<T,Alloc> &lhs, const Vector<T,Alloc> &rhs)
 	{
+		size_t i;
+
 		if (lhs.size() != rhs.size())
-			return false;
-		return std::equal(lhs.begin(), lhs.end(), rhs.begin());
+			return (false);
+		i = 0;
+		while (i < lhs.size())
+		{
+			if (lhs.at(i) != rhs.at(i))
+				return (false);
+			i++;
+		}
+		return (true);
 	}
 
-	template <typename T>
-	bool operator!= (const Vector<T> &lhs, const Vector<T> &rhs)
+	template <class T, class Alloc>
+	bool operator!=(const Vector<T,Alloc> &lhs, const Vector<T,Alloc> &rhs)
 	{
-		return !(lhs == rhs);
+		return (!(lhs == rhs));
 	}
 
-	template <typename T>
-	bool operator<(const Vector<T> &lhs, const Vector<T> &rhs)
+	template <class T, class Alloc>
+	bool operator<(const Vector<T,Alloc> &lhs, const Vector<T,Alloc> &rhs)
 	{
-		return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+		size_t size1;
+		size_t size2;
+
+		size1 = 0;
+		if (lhs.size() < rhs.size())
+			size2 = lhs.size();
+		else
+			size2 = rhs.size();
+		while (size1 < size2)
+		{
+			if (lhs.at(size1) != rhs.at(size1))
+				return (lhs.at(size1) < rhs.at(size1));
+			size1++;
+		}
+		return (lhs.size() < rhs.size());
 	}
 
-	template <typename T>
-	bool operator<=(const Vector<T> &lhs, const Vector<T> &rhs)
+	template <class T, class Alloc>
+	bool operator<=(const Vector<T,Alloc> &lhs, const Vector<T,Alloc> &rhs)
 	{
-		return !(rhs < lhs);
+		return (lhs < rhs || lhs == rhs);
 	}
 
-	template <typename T>
-	bool operator>(const Vector<T> &lhs, const Vector<T> &rhs)
+	template <class T, class Alloc>
+	bool operator>(const Vector<T,Alloc> &lhs, const Vector<T,Alloc> &rhs)
 	{
-		return rhs < lhs;
+		return (!(lhs < rhs) && !(lhs == rhs));
 	}
 
-	template <typename T>
-	bool operator>=(const Vector<T> &lhs, const Vector<T> &rhs)
+	template <class T, class Alloc>
+	bool operator>=(const Vector<T,Alloc> &lhs, const Vector<T,Alloc> &rhs)
 	{
-		return !(lhs < rhs);
+		return (!(lhs < rhs));
 	}
 
-	template <typename T>
-	void swap (Vector<T> &x, Vector<T> &y)
+	template <class T, class Alloc>
+	void swap(Vector<T,Alloc> &x, Vector<T,Alloc> &y)
 	{
-		return x.swap(y);
+		x.swap(y);
 	}
-}
+};
 
 #endif
