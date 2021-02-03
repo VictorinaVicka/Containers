@@ -6,7 +6,7 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 15:53:39 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/02/01 21:24:57 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/02/03 14:16:20 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ namespace ft
 	template <class T, class Container>
 	bool	operator>(const Stack<T,Container> &lhs, const Stack<T,Container> &rhs)
 	{
-		return (rhs.cont > lhs.cont);
+		return (lhs.cont > rhs.cont);
 	}
 
 	template <class T, class Container>
