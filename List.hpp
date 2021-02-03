@@ -6,7 +6,7 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 16:54:36 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/02/01 21:27:48 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/02/03 11:43:01 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,7 @@ namespace ft
 			return (std::numeric_limits<size_type>::max()/sizeof(origin));
 		}
 
-		// Element access:
+		// data access:
 
 		reference	front()
 		{
@@ -232,24 +232,102 @@ namespace ft
 
 		void	push_front(const value_type &val)
 		{
-			insert(begin(), val);
+			Node <T> *ptr = new Node<T>;
+
+			ptr->next = NULL;
+			start->next = ptr;
+			ptr->prev = start;
+			ptr->data = alloc.allocate(1);
+			alloc.construct(ptr->data, val);
+			if (!len)
+			{
+				finish = origin = ptr;
+				stop->prev = finish;
+				finish->next = stop;
+			}
+			else
+			{
+				origin->prev = ptr;
+				ptr->next = origin;
+				origin = ptr;
+			}
+			len++;
 		}
 
 		void pop_front()
 		{
-			erase(begin());
+				if (len)
+			{
+				if (len == 1)
+				{
+					alloc.destroy(origin->data);
+					alloc.deallocate(origin->data, 1);
+					delete(origin);
+					stop->prev = start;
+					start->next = stop;
+					finish = origin = stop;
+				}
+				else
+				{
+					origin = origin->next;
+					alloc.destroy(origin->prev->data);
+					alloc.deallocate(origin->prev->data, 1);
+					delete(origin->prev);
+					origin->prev = start;
+					start->next = origin;
+				}
+				len--;
+			}
 		}
 
 		void push_back(const value_type &val)
 		{
-			insert(end(), val);
+			Node <T> *ptr = new Node<T>;
+
+			ptr->next = stop;
+			stop->prev = ptr;
+			ptr->prev = NULL;
+			ptr->data = alloc.allocate(1);
+			alloc.construct(ptr->data, val);
+			if (!len)
+			{
+				origin = finish = ptr;
+				start->next = origin;
+				origin->prev = start;
+			}
+			else
+			{
+				finish->next = ptr;
+				ptr->prev = finish;
+				finish = finish->next;
+			}
+			len++;
 		}
 
 		void pop_back()
 		{
-			iterator it = end();
-			it--;
-			erase(it);
+			if (len)
+			{
+				if (len == 1)
+				{
+					alloc.destroy(finish->data);
+					alloc.deallocate(finish->data, 1);
+					delete(finish);
+					stop->prev = start;
+					start->next = stop;
+					origin = finish = stop;
+				}
+				else
+				{
+					finish = finish->prev;
+					alloc.destroy(finish->next->data);
+					alloc.deallocate(finish->next->data, 1);
+					delete(finish->next);
+					finish->next = stop;
+					stop->prev = finish;
+				}
+				len--;
+			}
 		}
 
 		iterator insert(iterator position, const value_type &val)
@@ -408,7 +486,8 @@ namespace ft
 
 		void clear()
 		{
-			erase(begin(), end());
+			while (len)
+				pop_back();
 		}
 
 		// Operations:

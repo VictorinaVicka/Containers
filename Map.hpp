@@ -3,611 +3,938 @@
 /*                                                        :::      ::::::::   */
 /*   Map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
+/*   Brhs: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/25 17:06:37 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/01/26 17:00:16 by tfarenga         ###   ########.fr       */
+/*   Created: 2021/01/25 17:06:37 brhs tfarenga          #+#    #+#             */
+/*   Updated: 2021/02/02 15:32:24 brhs tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_HPP
 # define MAP_HPP
 
-# include "TurnedIterator.hpp"
-# include "Utils.hpp"
+# include <iostream>
+# include <limits>
+# include <functional>
+# include "Map_Iteratot.hpp"
 
 namespace ft
 {
-	template <typename Key, typename T, typename Compare = Bit<Key> >
-	class Map;
-
-    template <typename Key, typename T, typename Compare = Bit<Key> >
-	class MapIt
-	{
-	public:
-        typedef Key key_type;
-		typedef T mapped_type;
-        typedef std::pair<const key_type, mapped_type> value_type;
-        typedef Compare key_compare;
-		typedef value_type *pointer;
-		typedef value_type &reference;
-		typedef	std::ptrdiff_t difference_type;
-		typedef std::bidirectional_iterator_tag iterator_category;
-
-	private:
-		typedef typename Map<Key, T, Compare>::Node Node;
-		typedef MapIt<Key, T, Compare> Self;
-		Node *newNode;
-
-	public:
-		MapIt() {}
-		MapIt(Node *node): newNode(node) {}
-		MapIt(const Self &c): newNode(c.newNode) {}
-		~MapIt() {}
-
-		template <typename _Key, typename _T, typename _Compare>
-		friend class Map;
-
-		template <typename _Key, typename _T, typename _Compare>
-		friend bool operator==(const MapIt<_Key, _T, _Compare> &lhs, const MapIt<_Key, _T, _Compare> &rhs);
-
-		template <typename _Key, typename _T, typename _Compare>
-		friend bool operator!=(const MapIt<_Key, _T, _Compare> &lhs, const MapIt<_Key, _T, _Compare> &rhs);
-
-		Self &operator=(const Self &self)
-		{
-			newNode = self.newNode;
-			return (*this);
-		}
-
-		Self &operator++()
-		{
-            if (newNode->more)
-			{
-                newNode = newNode->more;
-                while (newNode->less)
-                    newNode = newNode->less;
-            }
-            else
-			{
-                Node *tmp;
-                do
-				{
-                    tmp = newNode;
-                    newNode = newNode->source;
-                } while(newNode && newNode->more == tmp);
-            }
-			return (*this);
-		}
-
-		Self operator++(int)
-		{
-			Self copy = *this;
-            operator++();
-			return (copy);
-		}
-
-		Self &operator--()
-		{
-            if (newNode->less)
-			{
-                newNode = newNode->less;
-                while (newNode && newNode->more)
-                    newNode = newNode->more;
-            }
-            else
-			{
-                Node *tmp;
-                do
-				{
-                    tmp = newNode;
-                    newNode = newNode->source;
-                }
-				while (newNode && newNode->less == tmp);
-            }
-			return (*this);
-		}
-
-		Self operator--(int)
-		{
-			Self copy = *this;
-            operator--();
-			return (copy);
-		}
-
-		reference operator*() const
-		{
-			return (newNode->data);
-		}
-
-		pointer operator->() const
-		{
-			return (&newNode->data);
-		}
-	};
-
-	template <typename Key, typename T, typename Compare>
-	bool operator==(const MapIt<Key, T, Compare> &lhs, const MapIt<Key, T, Compare> &rhs)
-	{
-		return (lhs.newNode == rhs.newNode);
-	}
-
-	template <typename Key, typename T, typename Compare>
-	bool operator!=(const MapIt<Key, T, Compare> &lhs, const MapIt<Key, T, Compare> &rhs)
-	{
-		return !(lhs.newNode == rhs.newNode);
-	}
-
-    template <typename Key, typename T, typename Compare>
+	template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<std::pair<const Key,T> > >
 	class Map
 	{
 	public:
-        typedef Key key_type;
+		typedef Key key_type;
 		typedef T mapped_type;
-        typedef std::pair<const key_type, mapped_type> value_type;
-        typedef Compare key_compare;
-		typedef value_type &reference;
-		typedef const value_type &const_reference;
-		typedef value_type *pointer;
-		typedef const value_type *const_pointer;
-		typedef MapIt<Key, T, Compare> iterator;
-		typedef const MapIt<const Key, const T, Compare> const_iterator;
-		typedef TurnedIterator<iterator> reverse_iterator;
-		typedef const TurnedIterator<const_iterator> const_reverse_iterator;
-		typedef std::ptrdiff_t difference_type;
+		typedef std::pair<const key_type, mapped_type> value_type;
+		typedef std::less<key_type> key_compare;
+		typedef Alloc allocator_type;
+		typedef T &reference;
+		typedef const T &const_reference;
+		typedef	T *pointer;
+		typedef	const T *const_pointer;
+		typedef ft::MapIt<Key, T> iterator;
+		typedef ft::ConstMapIt<Key, T> const_iterator;
+		typedef ft::ReverseMapIt<Key, T> reverse_iterator;
+		typedef ft::ConstReverseMapIt<Key, T> const_reverse_iterator;
+		typedef typename ft::MapIt<Key, T>::difference_type	difference_type;
 		typedef size_t size_type;
-	private:
-		class Value
+
+	class compareVal
+	{
+  	friend class map;
+	protected:
+  		Compare com;
+  		compareVal (Compare c) : com(c) {}
+
+	public:
+		typedef bool result;
+		typedef value_type firstArg;
+		typedef value_type secondArg;
+
+		bool operator() (const value_type& lhs, const value_type& rhs) const
 		{
-		private:
-			key_compare newKey;
-
-		public:
-			typedef bool result;
-			typedef value_type first_argument;
-			typedef value_type second_argument;
-			template <typename _Key, typename _T, typename _Compare>
-			friend class Map;
-
-			Value(key_compare c): newKey(c) {}
-
-			Value(const Value &val): newKey(val.newKey) {}
-
-			~Value() {}
-
-			Value &operator=(const Value &val)
-			{
-				newKey = val.newKey;
-				return (*this);
-			}
-
-			bool operator()(value_type &x, value_type &y) const
-			{
-				return (newKey(x.first, y.first));
-			}
-		};
+			return com(lhs.first, rhs.first);
+		}
+	};
 
 	private:
-		typedef Map<Key, T, Compare> Self;
-        struct Node
-		{
-			value_type data;
-			Node *less; //<
-			Node *more; //>
-            Node *source;
+		MapThree<Key, T> *origin;
+		MapThree<Key, T> *_begin;
+		MapThree<Key, T> *finish;
+		allocator_type alloc;
+		key_compare newKey;
+		size_type len;
 
-			Node(Node *less_, Node *more_, Node *source_, value_type data_) :
-				data(data_), less(less_), more(more_), source(source_) {};
-		};
-		size_type newSize;
-		Node *center;
-        Node *guard;
-        key_compare newKey;
+		void	turnLeft(MapThree<Key, T> *lhs, MapThree<Key, T> *rhs)
+		{
+			if (!lhs->parent)
+				this->origin = rhs;
+			else if (lhs->parent->right == lhs)
+				lhs->parent->right = rhs;
+			else if (lhs->parent->left == lhs)
+				lhs->parent->left = rhs;
+			rhs->parent = lhs->parent;
+			lhs->parent = rhs;
+			if (rhs->left)
+				rhs->left->parent = lhs;
+			lhs->right = rhs->left;
+			rhs->left = lhs;
+			if (lhs->right)
+			{
+				heightLen(lhs->right);
+			}
+			else
+				lhs->newRight = 0;
+				heightLen(lhs);
+		}
+
+		void	toRight(MapThree<Key, T> *lhs, MapThree<Key, T> *rhs)
+		{
+			if (!rhs->parent)
+				this->origin = lhs;
+			else if (rhs->parent->right == rhs)
+				rhs->parent->right = lhs;
+			else if (rhs->parent->left == rhs)
+				rhs->parent->left = lhs;
+			lhs->parent = rhs->parent;
+			rhs->parent = lhs;
+			if (lhs->right)
+				lhs->right->parent = rhs;
+			rhs->left = lhs->right;
+			lhs->right = rhs;
+			if (!rhs->left)
+			{
+				rhs->newLeft = 0;
+				heightLen(rhs);
+			}
+			else
+				heightLen(rhs->left);
+		}
+
+		void	heightLen(MapThree<Key, T> *branch)
+		{
+			MapThree<Key, T> *origin;
+
+			origin = (branch) ? branch->parent : NULL;
+			while (origin)
+			{
+				if (origin->left == branch)
+					origin->newLeft = std::max<int>(branch->newLeft, branch->newRight) + 1;
+				else if (origin->right == branch)
+					origin->newRight = std::max<int>(branch->newLeft, branch->newRight) + 1;
+				branch = origin;
+				origin = branch->parent;
+			}
+		}
+
+		void	turnLeftRight(MapThree<Key, T> *lhs, MapThree<Key, T> *rhs, MapThree<Key, T> *z)
+		{
+			turnLeft(rhs, lhs);
+			toRight(lhs, z);
+		}
+
+		void	turnRightLeft(MapThree<Key, T> *lhs, MapThree<Key, T> *rhs, MapThree<Key, T> *z)
+		{
+			toRight(lhs, rhs);
+			turnLeft(z, lhs);
+		}
+
+		void	balance(MapThree<Key, T> *branch, int type)
+		{
+			MapThree<Key, T> *start;
+			MapThree<Key, T> *grCh;
+			MapThree<Key, T> *origin;
+			int factor;
+
+			start = branch;
+			heightLen(branch);
+			grCh = branch;
+			origin = (branch && branch->parent) ? branch->parent : branch;
+			while (origin)
+			{
+				factor = static_cast<int>(origin->newLeft - origin->newRight);
+				if (factor > 1 || factor < -1)
+				{
+					rebalance(factor, grCh, type);
+					balance(branch, type);
+				}
+				grCh = branch;
+				branch = origin;
+				origin = branch->parent;
+			}
+			heightLen(start);
+			factor = static_cast<int>(this->origin->newLeft - this->origin->newRight);
+			if (factor > 1 || factor < -1)
+				balance(start, type);
+		}
+
+		void	rebalance(int factor1, MapThree<Key, T> *branch, int type)
+		{
+			if (type == 0)
+			{
+				if (factor1 < 1)
+				{
+					if (branch == branch->parent->right)
+						turnLeft(branch->parent, branch);
+					else if (branch == branch->parent->left)
+						turnRightLeft(branch, branch->parent, branch->parent->parent);
+				}
+				else if (factor1 > 1)
+				{
+					if (branch == branch->parent->left)
+						toRight(branch, branch->parent);
+					else if (branch == branch->parent->right)
+						turnLeftRight(branch, branch->parent, branch->parent->parent);
+				}
+			}
+			else if (type == 1)
+			{
+				int factor2;
+
+				if (factor1 < -1)
+				{
+					factor2 = static_cast<int>(branch->right->newLeft - branch->right->newRight);
+					if (factor2 <= 0)
+						turnLeft(branch, branch->right);
+					else
+						turnRightLeft(branch->right, branch, branch->parent);
+				}
+				else if (factor1 > 1)
+				{
+					factor2 = static_cast<int>(branch->left->newLeft - branch->left->newRight);
+					if (factor2 >= 0)
+						toRight(branch->left, branch);
+					else
+						turnLeftRight(branch->left, branch, branch->parent);
+				}
+			}
+		}
+
+		void	delnewMap(MapThree<Key, T> *newMap)
+		{
+			MapThree<Key, T> *child;
+			MapThree<Key, T> *newBalance;
+
+			if ((!newMap->left || newMap->left == this->_begin) && (!newMap->right || newMap->right == this->finish))
+			{
+				if (newMap->parent && newMap->parent->left == newMap)
+				{
+					if (newMap->left == this->_begin)
+						newMap->parent->left = this->_begin;
+					else
+						newMap->parent->left = NULL;
+				}
+				else if (newMap->parent && newMap->parent->right == newMap)
+				{
+					if (newMap->right == this->finish)
+						newMap->parent->right = this->finish;
+					else
+						newMap->parent->right = NULL;
+				}
+				else
+				{
+					this->origin = this->finish;
+					this->origin->left = this->_begin;
+					this->_begin->parent = this->origin;
+				}
+				newBalance = newMap->parent;
+				delete (newMap);
+			}
+			else if (newMap->left && newMap->left != this->_begin && newMap->right && newMap->right != this->finish)
+			{
+				MapThree<Key, T> *child2;
+
+				newBalance = NULL;
+				child = newMap->left;
+				while (child->right && child->right != this->finish)
+					child = child->right;
+				child2 = new MapThree<Key, T>();
+				child2->parent = newMap->parent;
+				child2->left = newMap->left;
+				child2->right = newMap->right;
+				child2->newLeft = newMap->newLeft;
+				child2->newRight = newMap->newRight;
+				newMap->parent = child->parent;
+				newMap->left = child->left;
+				newMap->right = child->right;
+				newMap->newLeft = child->newLeft;
+				newMap->newRight = child->newRight;
+				if (newMap->left)
+					newMap->left->parent = newMap;
+				if (newMap->right)
+					newMap->right->parent = newMap;
+				if (newMap->parent == newMap)
+				{
+					newMap->parent = child;
+					newMap->parent->left = newMap;
+				}
+				else if (newMap->parent->left == child)
+					newMap->parent->left = newMap;
+				else if (newMap->parent->right == child)
+					newMap->parent->right = newMap;
+				child->parent = child2->parent;
+				if (!child->parent)
+					this->origin = child;
+				else if (child->parent->left == newMap)
+					child->parent->left = child;
+				else if (child->parent->right == newMap)
+					child->parent->right = child;
+				child->left = child2->left;
+				child->right = child2->right;
+				child->newLeft = child2->newLeft;
+				child->newRight = child2->newRight;
+				if (child->left == child)
+					child->left = newMap;
+				else if (child->right == child)
+					child->right = newMap;
+				if (child->left)
+					child->left->parent = child;
+				if (child->right)
+					child->right->parent = child;
+				delete(child2);
+				delnewMap(newMap);
+			}
+			else
+			{
+				child = (newMap->left && newMap->left != this->_begin) ? newMap->left : newMap->right;
+				child->parent = newMap->parent;
+				if (!child->parent)
+					this->origin = child;
+				else if (child->parent->left == newMap)
+					child->parent->left = child;
+				else if (child->parent->right == newMap)
+					child->parent->right = child;
+				newBalance = (child->parent) ? child->parent : child;
+				heightLen(child);
+				if (newMap->left == this->_begin)
+					child->left = this->_begin;
+				delete(newMap);
+			}
+			if (newBalance)
+				balance(newBalance, 1);
+		}
+
 	public:
 
-		//Member functions:
+	// Member functions:
 
-		Map(const key_compare &comp = key_compare()): newSize(0), newKey(comp)
+		explicit Map(const key_compare &newKey = key_compare(), const allocator_type &alloc = allocator_type())
 		{
-			center = new Node(NULL, NULL, NULL, value_type());
-			guard = center;
+			this->newKey = newKey;
+			this->alloc = alloc;
+			_begin = new MapThree<Key, T>();
+			_begin->left = NULL;
+			_begin->right = NULL;
+			finish = new MapThree<Key, T>();
+			finish->left = _begin;
+			_begin->parent = finish;
+			finish->right = NULL;
+			finish->parent = NULL;
+			origin = finish;
+			len = 0;
+			return ;
 		}
 
-		template <typename InputIterator>
-		Map(InputIterator first, InputIterator last, const key_compare &comp = key_compare()): newSize(0), newKey(comp)
+		Map(const Map &copy)
 		{
-			center = new Node(NULL, NULL, NULL, value_type());
-			guard = center;
-			insert(begin(), first, last);
+			_begin = new MapThree<Key, T>();
+			_begin->left = NULL;
+			_begin->right = NULL;
+			finish = new MapThree<Key, T>();
+			finish->left = _begin;
+			_begin->parent = finish;
+			finish->right = NULL;
+			finish->parent = NULL;
+			origin = finish;
+			len = 0;
+			*this = copy;
+			return ;
 		}
 
-		Map(const Self &c): newSize(0), newKey(c.newKey)
+		Map &operator=(const Map &target)
 		{
-			center = new Node(NULL, NULL, NULL, value_type());
-			guard = center;
-			insert(begin(), c.begin(), c.end());
+			clear();
+			newKey = target.newKey;
+			alloc = target.alloc;
+			insert(target.begin(), target.end());
+			return (*this);
 		}
 
 		~Map()
 		{
 			clear();
-			delete guard;
+			delete(finish);
+			delete(_begin);
+			return ;
 		}
 
-		template <typename _Key, typename _T, typename _Compare>
-		friend class Map;
-
-		template <typename _Key, typename _T, typename _Compare>
-		friend class MapIt;
-
-		template <typename Iterator>
-		friend class ReverseIterator;
-
-		Self &operator=(const Map &c) {
-			clear();
-			newSize = 0;
-			newKey = c.newKey;
-			insert(begin(), c.begin(), c.end());
-			return *this;
+		template <class InputIterator>
+		Map(InputIterator first, InputIterator last, const key_compare &newKey = key_compare(), const allocator_type &alloc = allocator_type())
+		{
+			this->newKey = newKey;
+			this->alloc = alloc;
+			_begin = new MapThree<Key, T>();
+			_begin->left = NULL;
+			_begin->right = NULL;
+			finish = new MapThree<Key, T>();
+			finish->left = _begin;
+			_begin->parent = finish;
+			finish->right = NULL;
+			finish->parent = NULL;
+			origin = finish;
+			len = 0;
+			insert(first, last);
 		}
 
 		// Iterators:
 
 		iterator begin()
 		{
-            Node *node = center;
-            while (node && node->less)
-                node = node->less;
-			return (iterator(node));
+			MapThree<Key, T> *newMap;
+
+			newMap = origin;
+			while (newMap->left && newMap->left != _begin)
+				newMap = newMap->left;
+			return (iterator(newMap));
 		}
 
 		const_iterator begin() const
 		{
-            Node *node = center;
-            while (node && node->less)
-                node = node->less;
-			return (const_iterator(node));
+			MapThree<Key, T> *newMap;
+
+			newMap = origin;
+			while (newMap->left && newMap->left != _begin)
+				newMap = newMap->left;
+			return (const_iterator(newMap));
 		}
 
-		iterator end()
+     	iterator end()
 		{
-			return (iterator(guard));
+			return (iterator(finish));
 		}
 
 		const_iterator end() const
 		{
-			return (const_iterator(guard));
+			return (const_iterator(finish));
 		}
 
 		reverse_iterator rbegin()
 		{
-			return (reverse_iterator(end()));
+			MapThree<Key, T> *newMap;
+
+			newMap = origin;
+			while (newMap->right && newMap->right != finish)
+				newMap = newMap->right;
+			return (reverse_iterator(newMap));
 		}
 
-		const_reverse_iterator rbegin() const
+		const_reverse_iterator	rbegin() const
 		{
-			return (const_reverse_iterator(end()));
+			MapThree<Key, T> *newMap;
+
+			newMap = origin;
+			while (newMap->right && newMap->right != finish)
+				newMap = newMap->right;
+			return (const_reverse_iterator(newMap));
 		}
 
 		reverse_iterator rend()
 		{
-			return (reverse_iterator(begin()));
+			return (reverse_iterator(_begin));
 		}
 
-		const_reverse_iterator rend() const
+		const_reverse_iterator	rend() const
 		{
-			return (const_reverse_iterator(begin()));
+			return (const_reverse_iterator(_begin));
 		}
 
-        // Capacity:
+		// Capacity:
 
 		bool empty() const
 		{
-			return (newSize == 0);
+			return (!len);
 		}
 
-		size_type size() const
+		size_type  size() const
 		{
-			return (newSize);
+			return (len);
 		}
 
 		size_type max_size() const
 		{
-			return (std::numeric_limits<std::size_t>::max() / sizeof(value_type));
+			return (std::numeric_limits<size_type>::max()/sizeof(origin));
 		}
 
-        // Element access:
+		// Element access:
 
-        mapped_type &operator[](const key_type& k)
+		mapped_type &operator[](const key_type &k)
 		{
-            return (*((this->insert(std::make_pair(k,mapped_type()))).first)).second;
-        }
+			MapThree<Key, T> *newMap;
 
-        //Modifiers:
-
-        std::pair<iterator, bool> insert(const value_type &val)
-		{
-            Node *node = center;
-
-            while (1)
+			newMap = origin;
+			while (newMap && newMap != finish && newMap != _begin)
 			{
-				if (node == guard)
+				if (k == newMap->two.first)
+					return (newMap->two.second);
+				if (newKey(k, newMap->two.first))
 				{
-					Node *source = guard->source;
-					if (source)
-					{
-						source->more = new Node(NULL, guard, source, val);
-						node = source->more;
-					}
+					if (newMap->left)
+						newMap = newMap->left;
 					else
-					{
-						center = new Node(NULL, guard, source, val);
-						node = center;
-					}
-					guard->source = node;
-					break ;
-				}
-                if (!newKey(node->data.first, val.first) && !newKey(val.first, node->data.first))
-                    return (std::make_pair(iterator(node), false));
-                if (newKey(node->data.first, val.first))
-				{
-                    if (node->more)
-                        node = node->more;
-                    else
-					{
-                        node->more = new Node(NULL, NULL, node, val);
-                        node = node->more;
-                        break ;
-                    }
-                }
-                else if (newKey(val.first, node->data.first))
-				{
-                    if (node->less)
-                        node = node->less;
-                    else
-					{
-                        node->less = new Node(NULL, NULL, node, val);
-                        node = node->less;
-                        break ;
-                    }
-                }
-            }
-			newSize++;
-            return (std::make_pair(iterator(node), true));
-        }
-
-        iterator insert(iterator position, const value_type &val)
-		{
-            (void)position;
-            iterator it = insert(val).first;
-            return (it);
-        }
-
-        template <typename InputIterator>
-        void insert(InputIterator first, InputIterator last)
-		{
-            for (; first != last; first++)
-                insert(*first);
-        }
-
-		void erase(iterator position)
-		{
-			Node *node = position.newNode;
-			if (node->source)
-			{
-				if (node->more)
-				{
-					if (node == node->source->more)
-						node->source->more = node->more;
-					else
-						node->source->less = node->more;
-					node->more->source = node->source;
-					if (node->less)
-					{
-						Node *tmp = node->more;
-						while (tmp->less)
-							tmp = tmp->less;
-						tmp->less = node->less;
-						node->less->source = tmp;
-					}
-				}
-				else if (node->less)
-				{
-					if (node == node->source->more)
-						node->source->more = node->less;
-					else
-						node->source->less = node->less;
-					node->less->source = node->source;
+						insert(iterator(newMap), value_type(k, 0));
 				}
 				else
 				{
-					if (node == node->source->more)
-						node->source->more = NULL;
+					if (newMap->right)
+						newMap = newMap->right;
 					else
-						node->source->less = NULL;
+						insert(iterator(newMap), value_type(k, 0));
+				}
+			}
+			insert(value_type(k, 0));
+			return (origin->two.second);
+		}
+
+		// Modifiers:
+
+		std::pair<iterator, bool> insert(const value_type &val)
+		{
+			MapThree<Key, T> *newMap;
+			MapThree<Key, T> *newnewMap;
+
+			newnewMap = new MapThree<Key, T>();
+			newnewMap->parent = NULL;
+			newnewMap->left = NULL;
+			newnewMap->right = NULL;
+			newnewMap->two = val;
+			newnewMap->newLeft = 0;
+			newnewMap->newRight = 0;
+			if (origin != finish)
+			{
+				newMap = origin;
+				while (!newnewMap->parent)
+				{
+					if (newnewMap->two.first == newMap->two.first)
+					{
+						delete(newnewMap);
+						return (std::pair<iterator, bool>(iterator(newMap), false));
+					}
+					if (newKey(newnewMap->two.first, newMap->two.first))
+					{
+						if (newMap->left && newMap->left != _begin)
+							newMap = newMap->left;
+						else
+						{
+							if (newMap->left == _begin)
+								_begin->parent = newnewMap;
+							newMap->left = newnewMap;
+							newnewMap->parent = newMap;
+							if (_begin->parent == newnewMap)
+								newnewMap->left = _begin;
+						}
+					}
+					else
+					{
+						if (newMap->right && newMap->right != finish)
+							newMap = newMap->right;	
+						else
+						{
+							if (newMap->right == finish)
+								finish->parent = newnewMap;
+							newMap->right = newnewMap;
+							newnewMap->parent = newMap;
+							if (finish->parent == newnewMap)
+								newnewMap->right = finish;
+						}
+					}
 				}
 			}
 			else
 			{
-				if (node->more)
+				origin = newnewMap;
+				origin->right = finish;
+				origin->left = _begin;
+				finish->parent = origin;
+				finish->left = NULL;
+				finish->right = NULL;
+				_begin->parent = origin;
+			}
+			balance(newnewMap, 0);
+			len++;
+			return (std::pair<iterator, bool>(iterator(newnewMap), true));
+		}
+
+		iterator insert(iterator position, const value_type &val)
+		{
+			MapThree<Key, T> *newMap;
+			MapThree<Key, T> *newnewMap;
+			iterator it;
+
+			it = find(val.first);
+			if (it != this->end())
+				return (it);
+			newnewMap = new MapThree<Key, T>();
+			newnewMap->parent = NULL;
+			newnewMap->left = NULL;
+			newnewMap->right = NULL;
+			newnewMap->two = val;
+			newnewMap->newLeft = 0;
+			newnewMap->newRight = 0;
+			if (this->origin != this->finish)
+			{
+				newMap = position.getMap();
+				while (!newnewMap->parent)
 				{
-					center = node->more;
-					node->more->source = NULL;
-					if (node->less)
+					if (newMap == this->finish || newMap == this->_begin)
+						newMap = this->origin;
+					if (this->newKey(newnewMap->two.first, newMap->two.first))
 					{
-						Node *tmp = node->more;
-						while (tmp->less)
-							tmp = tmp->less;
-						tmp->less = node->less;
-						node->less->source = tmp;
+						if (newMap->left && newMap->left != this->_begin)
+							newMap = newMap->left;
+						else
+						{
+							if (newMap->left == this->_begin)
+								this->_begin->parent = newnewMap;
+							newMap->left = newnewMap;
+							newnewMap->parent = newMap;
+							if (this->_begin->parent == newnewMap)
+								newnewMap->left = this->_begin;
+						}
+					}
+					else
+					{
+						if (newMap->right && newMap->right != this->finish)
+							newMap = newMap->right;
+						else
+						{
+							if (newMap->right == this->finish)
+								this->finish->parent = newnewMap;
+							newMap->right = newnewMap;
+							newnewMap->parent = newMap;
+							if (this->finish->parent == newnewMap)
+								newnewMap->right = this->finish;
+						}
 					}
 				}
-				else if (node->less)
-				{
-					center = node->less;
-					node->less->source = NULL;
-				}
-				else
-					center = guard;
 			}
-			newSize--;
-			delete node;
+			else
+			{
+				this->origin = newnewMap;
+				this->origin->right = this->finish;
+				this->origin->left = this->_begin;
+				this->finish->parent = this->origin;
+				this->finish->left = NULL;
+				this->finish->right = NULL;
+				this->_begin->parent = this->origin;
+			}
+			this->balance(newnewMap, 0);
+			this->len++;
+			return (iterator(newnewMap));
+		}
+
+		template <class InputIterator>
+		void insert(InputIterator first, InputIterator last)
+		{
+			while (first != last)
+			{
+				insert(*first);
+				first++;
+			}
+		}
+
+		void erase(iterator position)
+		{
+			delnewMap(position.getMap());
+			this->len--;
 		}
 
 		size_type erase(const key_type &k)
 		{
-			iterator it = begin();
-			for(; (*it).first != k; it++)
-			{}
-			if (it != end())
+			MapThree<Key, T> *newMap;
+
+			newMap = this->origin;
+			while (newMap && newMap != this->finish && newMap != this->_begin)
 			{
-				erase(it);
-				return (1);
+				if (k == newMap->two.first)
+				{
+					erase(iterator(newMap));
+					return (1);
+				}
+				if (this->newKey(k, newMap->two.first))
+					newMap = newMap->left;
+				else
+					newMap = newMap->right;
 			}
 			return (0);
 		}
 
 		void erase(iterator first, iterator last)
 		{
-			for (; first != last;)
+			iterator next;
+
+			while (first != last)
 			{
-				iterator it = first;
-				first++;
-				erase(it);
+				next = first;
+				next++;
+				erase(first);
+				first = next;
 			}
 		}
 
-		void swap(Map &x)
+		void swap(Map &lhs)
 		{
-			std::swap(center, x.center);
-			std::swap(guard, x.guard);
-			std::swap(newSize, x.newSize);
+			MapThree <Key, T> *tmp;
+			size_type len;
+
+			tmp = origin;
+			origin = lhs.origin;
+			lhs.origin = tmp;
+			tmp = finish;
+			finish = lhs.finish;
+			lhs.finish = tmp;
+			tmp = _begin;
+			_begin = lhs._begin;
+			lhs._begin = tmp;
+			len = this->len;
+			this->len = lhs.len;
+			lhs.len = len;
 		}
 
 		void clear()
 		{
 			erase(begin(), end());
-			guard->more = NULL;
-			guard->less = NULL;
-			guard->source = NULL;
-			center = guard;
-			newSize = 0;
 		}
 
-		//Observers:
+		// Observers:
 
 		key_compare key_comp() const
 		{
 			return (newKey);
 		}
 
-		Value value_comp() const
+		compareVal value_comp() const
 		{
-			Value compare(newKey);
-			return (compare);
+			return (this->compareVal);
 		}
 
-		//Operations:
+		// Operations:
 
 		iterator find(const key_type &k)
 		{
-			Node *node = center;
-			while (node && node != guard)
+			MapThree <Key, T>	*newMap;
+
+			newMap = origin;
+			while (newMap && newMap != finish && newMap != _begin)
 			{
-				bool tst = newKey(node->data.first, k);
-				if (!tst && !newKey(k, node->data.first))
-					return (iterator(node));
-				if (!tst)
-					node = node->less;
+				if (k == newMap->two.first)
+					return (iterator(newMap));
+				if (newKey(k, newMap->two.first))
+					newMap = newMap->left;
 				else
-					node = node->more;
+					newMap = newMap->right;
 			}
 			return (end());
 		}
 
 		const_iterator find(const key_type &k) const
 		{
-			Node *node = center;
-			while (node && node != guard)
+			MapThree <Key, T>	*newMap;
+
+			newMap = origin;
+			while (newMap && newMap != finish && newMap != _begin)
 			{
-				bool tst = newKey(node->data.first, k);
-				if (!tst && !newKey(k, node->data.first))
-					return const_iterator(node);
-				if (!tst)
-					node = node->less;
+				if (k == newMap->two.first)
+					return (const_iterator(newMap));
+				if (newKey(k, newMap->two.first))
+					newMap = newMap->left;
 				else
-					node = node->more;
+					newMap = newMap->right;
 			}
 			return (end());
 		}
 
 		size_type count(const key_type &k) const
 		{
-			Node *node = center;
-
-			while (node && node != guard)
-			{
-				bool tst = newKey(node->data.first, k);
-				if (!tst && !newKey(k, node->data.first))
-					return (1);
-				if (!tst)
-					node = node->less;
-				else
-					node = node->more;
-			}
-			return (0);
+			return ((find(k) == end()));
 		}
 
 		iterator lower_bound(const key_type &k)
 		{
-			for (iterator it = begin(); it != end(); it++)
+			iterator it;
+			iterator it2;
+
+			it = begin();
+			it2 = end();
+			while (it != it2)
 			{
-				if (!newKey((*it).first, k))
-					return (it);
+				if (key_comp()((*it).first, k) <= 0)
+					return (iterator(it));
+				++it;
 			}
 			return (end());
 		}
 
 		const_iterator lower_bound(const key_type &k) const
 		{
-			for (const_iterator it = begin(); it != end(); it++)
+			const_iterator it;
+			const_iterator it2;
+
+			it = begin();
+			it2 = end();
+			while (it != it2)
 			{
-				if (!newKey((*it).first, k))
-					return (it);
+				if (key_comp()((*it).first, k) <= 0)
+					return (const_iterator(it));
+				++it;
 			}
 			return (end());
 		}
 
 		iterator upper_bound(const key_type &k)
 		{
-			for (iterator it = begin(); it != end(); it++)
+			iterator it;
+			iterator it2;
+
+			it = begin();
+			it2 = end();
+			while (it != it2)
 			{
-				if (newKey(k, (*it).first))
-					return (it);
+				if (((*it).first == k))
+					return (iterator(++it));
+				if (key_comp()((*it).first, k) <= 0)
+					return (iterator(it));
+				++it;
 			}
 			return (end());
 		}
 
 		const_iterator upper_bound(const key_type &k) const
 		{
-			for (const_iterator it = begin(); it != end(); it++)
+			const_iterator it;
+			const_iterator it2;
+
+			it = begin();
+			it2 = end();
+			while (it != it2)
 			{
-				if (newKey(k, (*it).first))
-					return (it);
+				if (((*it).first == k))
+					return (iterator(++it));
+				if (key_comp()((*it).first, k) <= 0)
+					return (iterator(it));
+				++it;
 			}
 			return (end());
 		}
 
-		std::pair<iterator, iterator> equal_range(const key_type &k)
+		std::pair<const_iterator,const_iterator> equal_range(const key_type &k) const
 		{
-			return (std::make_pair(lower_bound(k), upper_bound(k)));
+			return (std::pair<const_iterator, const_iterator>(lower_bound(k), upper_bound(k)));
 		}
 
-		std::pair<const_iterator, const_iterator> equal_range(const key_type &k) const
+		std::pair<iterator,iterator> equal_range(const key_type &k)
 		{
-			return (std::make_pair(lower_bound(k), upper_bound(k)));
+			return (std::pair<iterator, iterator>(lower_bound(k), upper_bound(k)));
 		}
-    };
+
+	};
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator==(const ft::Map<Key, T, Compare, Alloc> &lhs, const ft::Map<Key, T, Compare, Alloc> &rhs)
+	{
+		typename Map<Key, T, Compare, Alloc>::const_iterator it;
+		size_t i;
+
+		it = lhs.begin();
+		if (lhs.size() != rhs.size())
+			return (false);
+		i = 0;
+		while (i < lhs.size())
+		{
+			typename Map<Key, T, Compare, Alloc>::const_iterator it2 = rhs.find(it->first);
+			if (it2 == rhs.end())
+				return (false);
+			if (it2->first != it->first || it2->second != it->second)
+				return (false);
+			it++;
+			i++;
+		}
+		return (true);
+	}
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator!=(const ft::Map<Key, T, Compare, Alloc> &lhs, const ft::Map<Key, T, Compare, Alloc> &rhs)
+	{
+		return (!(lhs == rhs));
+	}
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator<(const ft::Map<Key, T, Compare, Alloc> &lhs, const ft::Map<Key, T, Compare, Alloc> &rhs)
+	{
+		typename Map<Key, T, Compare, Alloc>::const_iterator	it;
+		size_t n;
+		size_t i;
+
+		it = rhs.begin();
+		if (lhs.size() > rhs.size())
+			n = rhs.size();
+		else
+		{
+			it = lhs.begin();
+			n = lhs.size();
+		}
+		i = 0;
+		while (i < n)
+		{
+			if (lhs.size() > rhs.size())
+			{
+				typename Map<Key, T, Compare, Alloc>::const_iterator it2 = lhs.find(it->first);
+				if (it2 == lhs.end())
+					return (true);
+				if (it->first != it2->first)
+					return (it2->first < it->first);
+				if (it->second != it2->second)
+					return (it2->second < it->second);
+			}
+			else
+			{
+				typename Map<Key, T, Compare, Alloc>::const_iterator it2 = rhs.find(it->first);
+				if (it2 == rhs.end())
+					return (false);
+				if (it->first != it2->first)
+					return (it->first < it2->first);
+				if (it->second != it2->second)
+					return (it->second < it2->second);
+			}
+			it++;
+			i++;
+		}
+		return (lhs.size() < rhs.size());
+	}
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator<=(const ft::Map<Key, T, Compare, Alloc> &lhs, const ft::Map<Key, T, Compare, Alloc> &rhs)
+	{
+		return (lhs < rhs || lhs == rhs);
+	}
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator>(const ft::Map<Key, T, Compare, Alloc> &lhs, const ft::Map<Key, T, Compare, Alloc> &rhs)
+	{
+		return (!(lhs < rhs) && !(lhs == rhs));
+	}
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator>=(const ft::Map<Key, T, Compare, Alloc> &lhs, const ft::Map<Key, T, Compare, Alloc> &rhs)
+	{
+		return (!(lhs < rhs));
+	}
+
+	template <class Key, class T, class Compare, class Alloc>
+	void swap(ft::Map<Key, T, Compare, Alloc> &lhs, ft::Map<Key, T, Compare, Alloc> &rhs)
+	{
+		lhs.swap(rhs);
+	}
 };
 
 #endif

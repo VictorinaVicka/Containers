@@ -6,7 +6,7 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 13:31:56 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/02/01 21:43:32 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/02/02 12:42:53 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 
 namespace ft
 {
-
 	template <class T, class Container = random_access>
 	class VectorIt
 	{

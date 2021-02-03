@@ -6,7 +6,7 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 11:20:37 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/02/01 21:28:58 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/02/03 10:57:06 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ namespace ft
 
 		explicit Vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type())
 		{
-			alloc = alloc;
+			this->alloc = alloc;
 			arr = alloc.allocate(2);
 			newSize = 0;
 			newType = 0;
@@ -97,7 +97,7 @@ namespace ft
 		template <class InputIt>
 		Vector(InputIt first, InputIt last, const allocator_type& alloc = allocator_type())
 		{
-			alloc = alloc;
+			this->alloc = alloc;
 			arr = alloc.allocate(2);
 			newSize = 0;
 			newType = 0;

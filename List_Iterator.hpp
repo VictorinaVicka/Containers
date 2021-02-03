@@ -6,7 +6,7 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 14:27:25 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/02/01 21:33:13 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/02/03 11:41:14 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ namespace ft
 
 		ListIt &operator++()
 		{
-			if (newNode && newNode->next)
-				newNode = newNode->next;
+			if (this->newNode && this->newNode->next)
+				this->newNode = this->newNode->next;
 			return (*this);
 		}
 
