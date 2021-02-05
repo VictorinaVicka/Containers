@@ -1,34 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Utils.hpp                                          :+:      :+:    :+:   */
+/*   Start.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/21 15:31:56 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/01/25 13:33:45 by tfarenga         ###   ########.fr       */
+/*   Created: 2021/01/30 14:29:00 by tfarenga          #+#    #+#             */
+/*   Updated: 2021/02/03 12:15:49 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_HPP
-# define UTILS_HPP
+#ifndef START_HPP
+# define START_HPP
 
-template <typename T>
-struct Bit
-{
-    bool operator()(const T &left, const T &right) const
-    {
-        return left < right;
-    }
-};
+# include <cstddef>
 
-template <typename T>
-struct Peer
+namespace ft
 {
-    bool operator()(const T &left, const T &right) const
-    {
-        return left == right;
-    }
+	struct input_tag {};
+	struct forward_tag: input_tag {};
+	struct bidirectional_tag: forward_tag {};
+	struct random_access: bidirectional_tag {};
 };
 
 #endif

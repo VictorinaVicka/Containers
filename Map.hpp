@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   Brhs: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/25 17:06:37 brhs tfarenga          #+#    #+#             */
-/*   Updated: 2021/02/02 15:32:24 brhs tfarenga         ###   ########.fr       */
+/*   Created: 2021/01/25 10:11:09 by tfarenga          #+#    #+#             */
+/*   Updated: 2021/02/03 14:28:35 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <iostream>
 # include <limits>
 # include <functional>
-# include "Map_Iteratot.hpp"
+# include "Map_Iterator.hpp"
 
 namespace ft
 {

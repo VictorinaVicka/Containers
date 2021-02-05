@@ -190,7 +190,7 @@ namespace ft
 
 		size_type	max_size() const
 		{
-			return (std::numeric_limits<size_type>::max()/sizeof(origin));
+            return (std::numeric_limits<size_type>::max()/sizeof(Node<T>));
 		}
 
 		// data access:

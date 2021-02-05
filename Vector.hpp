@@ -6,7 +6,7 @@
 /*   By: tfarenga <tfarenga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 11:20:37 by tfarenga          #+#    #+#             */
-/*   Updated: 2021/02/03 10:57:06 by tfarenga         ###   ########.fr       */
+/*   Updated: 2021/02/03 14:10:23 by tfarenga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ namespace ft
 		explicit Vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type())
 		{
 			this->alloc = alloc;
-			arr = alloc.allocate(2);
+			arr = this->alloc.allocate(2);
 			newSize = 0;
 			newType = 0;
 			assign(static_cast<size_type>(n), static_cast<value_type>(val));
@@ -98,7 +98,7 @@ namespace ft
 		Vector(InputIt first, InputIt last, const allocator_type& alloc = allocator_type())
 		{
 			this->alloc = alloc;
-			arr = alloc.allocate(2);
+			arr = this->alloc.allocate(2);
 			newSize = 0;
 			newType = 0;
 			assign(static_cast<InputIt>(first), static_cast<InputIt>(last));
@@ -233,12 +233,12 @@ namespace ft
 
 		reference front()
 		{
-			return (arr[0]);
+			return (arr[0 + 1]);
 		}
 
 		const_reference front() const
 		{
-			return (arr[0]);
+			return (arr[0 + 1]);
 		}
 
 		reference back()
